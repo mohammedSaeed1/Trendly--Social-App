@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "./(components)/_Navbar/Navbar";
 import Footer from "./(components)/_Footer/Footer";
 import { Toast } from "@heroui/react";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,14 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <>
+    <Navbar/>
     <html
     lang="en"
-    className={`h-full antialiased`}
+    className={`h-full antialiased ${geistSans.variable} ${geistMono.variable}`}
     >
-      <Navbar/>
       <body className="min-h-full flex flex-col">{children}</body>
- <Toast.Provider placement="top"  />
-      <Footer/>
+      <Toast.Provider placement="top"  />
     </html>
+    <Footer/>
+    </>
   );
 }

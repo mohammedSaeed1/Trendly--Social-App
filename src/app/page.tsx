@@ -1,12 +1,17 @@
-// import Image from "next/image";
-import {Button} from '@heroui/react'
+import { getAllPosts } from "./services/post.service";
+import PostCard from "./(components)/PostCard/PostCard";
 
-export default function Home() {
+export default async function Home() {
+
+
+  const allPosts = await getAllPosts();
+
+
   return (
     <>
-     <Button>
-      Hello Mohamed Saeed Here.
-     </Button>
+    <section className="">
+    {allPosts?.map(post => <PostCard key={post._id} post = {post}/> )}
+    </section>
     
     </>
     
