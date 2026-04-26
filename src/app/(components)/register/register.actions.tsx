@@ -14,9 +14,9 @@ import { RegisterSchemaType } from "./register.types";
             }
         })
         const data = await res.json();    
-        if (res.ok) {
+        if (res.ok) {            
             const cookie = await cookies();
-            cookie.set("usertoken",data.token,{
+            cookie.set("usertoken",data.data.token,{
                 httpOnly: true,
                 sameSite: "lax"
             })
