@@ -11,5 +11,17 @@ export async function getAllPosts() :Promise<Post[]>{
     }
   })
     const data = await res.json();
-    return data.data.posts;
+    return data?.data?.posts;
   }
+
+ export const formatEgyptDate = (dateString: string) => {
+  return new Date(dateString).toLocaleString("en-EG", {
+    timeZone: "Africa/Cairo",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.2.0",
+    "@gravity-ui/icons": "github:gravity-ui/icons",
     "@heroui/react": "^3.0.3",
     "@heroui/styles": "^3.0.3",
     "@hookform/resolvers": "^5.2.2",

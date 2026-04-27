@@ -33,7 +33,7 @@ export default function RootLayout({
     lang="en"
     className={`h-full antialiased ${geistSans.variable} ${geistMono.variable}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#081832]">{children}</body>
       <Toast.Provider placement="top"  />
     </html>
     <Footer/>
