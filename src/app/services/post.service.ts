@@ -10,9 +10,7 @@ export async function getAllPosts() :Promise<Post[]>{
      headers:{
       Token : token || ""
      },
-     cache: "force-cache",
      next: {
-      revalidate: 60,
       tags: ["posts"]
      }
    })

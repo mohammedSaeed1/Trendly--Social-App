@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState, useRef, RefObject } from "react";
 import { createPost } from "./CreatePost.actions";
 
-
 export default function CreatePost() {
 
     const [isOpen, setIsOpen] = useState(false);

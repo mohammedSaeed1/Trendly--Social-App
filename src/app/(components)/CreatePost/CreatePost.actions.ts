@@ -1,6 +1,6 @@
 "use server"
 import { cookies } from "next/headers";
-
+import { revalidateTag } from "next/cache";
 
 export async function createPost(values : FormData){    
     const cookie = await cookies();
@@ -10,14 +10,14 @@ export async function createPost(values : FormData){
       body: values,
        headers:{    
         Token : token || ""
-    },
-    next: {
-        tags: ["posts"]
     }
   })
 
     // const data = await res.json();
-    if(res.ok) return true;
+    if(res.ok){
+      revalidateTag("posts");
+      return true;  
+    } 
     else return false;
     // return data?.data?.posts;
 }
