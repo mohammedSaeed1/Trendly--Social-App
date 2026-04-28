@@ -27,22 +27,21 @@ export default function PostCard({post}: {post: Post}) {
                    {post.body && <p className="text-red-400 wrap-break-word">{post.body}</p>}
                    {post.image && <img src={post.image} alt={"Fixed"} className="w-full"/>}
                 </main>
-                <footer className="flex items-center justify-between p-1.5">
+                <footer className="flex items-center gap-x-5 justify-evenly p-1.5">
                 <div className="flex items-center gap-x-1 text-[#637188]">
                     <i className="fa-regular fa-heart"></i>
-                    <h4>{post.likesCount}</h4>
-                    <h4>Likes</h4>               
+                  {post.likesCount > 0 && <h4>{post.likesCount}</h4>}  
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
                    <i className="fa-regular fa-comment"></i>
-                    <h4>{post.commentsCount}</h4>
-                    <h4>Comments</h4>               
+                   {post.commentsCount > 0 && <h4>{post.commentsCount}</h4>}
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
-                    <i className="fa-solid fa-share-nodes"></i>
-                    <h4>{post.sharesCount}</h4>    
-                    <h4>Share</h4>               
+                    <i className="fa-solid fa-share"></i>
+                   {post.sharesCount > 0 && <h4>{post.sharesCount}</h4>}    
                 </div>
+                    <i className="fa-solid fa-bookmark text-[#637188] ms-auto"></i>
+
                 </footer>
             </div>
         </>
