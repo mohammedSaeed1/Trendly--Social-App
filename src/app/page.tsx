@@ -1,5 +1,6 @@
 import { getAllPosts } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
+import CreatePost from "./(components)/CreatePost/CreatePost";
 
 export default async function Home() {
 
@@ -11,6 +12,7 @@ export default async function Home() {
   return (
     <>
     <section className="">
+      <CreatePost/>
     {allPosts?.map(post => <PostCard key={post._id} post = {post}/> )}
     </section>
     

@@ -2,16 +2,26 @@ import { cookies } from "next/headers";
 import { Post } from "../types/post.types";
 
  const cookie = await cookies();
- const token = cookie.get("usertoken");
+ const token = cookie.get("usertoken")?.value;
 
 export async function getAllPosts() :Promise<Post[]>{
-   const res = await fetch("https://route-posts.routemisr.com/posts",{
-    headers:{
-     Token : token?.value || ""
-    }
-  })
-    const data = await res.json();
-    return data?.data?.posts;
+  try{
+    const res = await fetch("https://route-posts.routemisr.com/posts",{
+     headers:{
+      Token : token || ""
+     },
+     cache: "force-cache",
+     next: {
+      revalidate: 60,
+      tags: ["posts"]
+     }
+   })
+     const data = await res.json();
+     return data?.data?.posts;
+   }
+   catch(error){
+    console.log("From error",error);
+   }
   }
 
  export const formatEgyptDate = (dateString: string) => {
@@ -25,3 +35,4 @@ export async function getAllPosts() :Promise<Post[]>{
     hour12: true,
   });
 };
+

@@ -17,7 +17,8 @@ export async function loginForm(values: LoginSchemaType) {
         const cookie = await cookies();
         cookie.set("usertoken", data.data.token, {
             httpOnly: true,
-            sameSite: "lax"
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 7
         })
         return true;
     } else {

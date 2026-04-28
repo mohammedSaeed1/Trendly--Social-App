@@ -7,7 +7,7 @@ export default function PostCard({post}: {post: Post}) {
        
     return (
         <>
-            <div className="bg-[#1D2E48] md:p-5 md:w-1/3 my-2 rounded-lg border-4 border-[#2B3767]">
+            <div className="bg-[#1D2E48] md:p-5 md:w-1/3 mx-auto my-2 rounded-lg border-4 border-[#2B3767]">
 
                 <header className="flex justify-between items-center p-1.5">
                     <div className="flex">
@@ -24,8 +24,8 @@ export default function PostCard({post}: {post: Post}) {
             
                 </header>
                 <main className="p-1.5">
-                    <p className="text-red-400 wrap-break-word">{post.body}</p>
-                    <img src={post.image} alt={"Fixed"} className="w-full"/>
+                   {post.body && <p className="text-red-400 wrap-break-word">{post.body}</p>}
+                   {post.image && <img src={post.image} alt={"Fixed"} className="w-full"/>}
                 </main>
                 <footer className="flex items-center justify-between p-1.5">
                 <div className="flex items-center gap-x-1 text-[#637188]">
