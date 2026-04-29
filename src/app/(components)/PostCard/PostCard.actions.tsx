@@ -1,6 +1,7 @@
 "use server"
 
 import { getToken } from "@/app/lib/auth";
+import { revalidateTag } from "next/cache";
 
 export async function addLikeAndUnLike(postId: string) {
     try {
@@ -13,7 +14,10 @@ export async function addLikeAndUnLike(postId: string) {
                 tags: ["posts"]
             }
         })
-        if(res.ok) return true;
+        if (res.ok) {
+            revalidateTag("posts");
+            return true;
+        }
         else return false;
     }
     catch (error) {
@@ -31,8 +35,39 @@ export async function addBookmarkAndUnBookmark(postId: string) {
                 tags: ["posts"]
             }
         })
-        if(res.ok) return true
+        if (res.ok) {
+            revalidateTag("posts");
+            return true;
+        }
         else return false;
+    }
+    catch (error) {
+        console.log("From error", error);
+    }
+}
+
+export async function sharePost(postId: string , bodyContent? : string) {
+    try {
+        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/share`, {
+            method: "POST",
+            body: bodyContent ? JSON.stringify({body : bodyContent}) : undefined,
+            headers: {
+                Token: await getToken() || "",
+                "Content-type": "application/json"
+            },
+            next: {
+                tags: ["posts"]
+            }
+        })
+        if (res.ok) {
+           revalidateTag("posts");
+            return true
+        }
+        else {
+            const data = await res.json();
+            console.log(data);
+            return false;
+        }
     }
     catch (error) {
         console.log("From error", error);

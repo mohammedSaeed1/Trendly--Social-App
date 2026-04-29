@@ -3,6 +3,7 @@ import { Post } from "@/app/types/post.types";
 import { Avatar} from "@heroui/react";
 import Bookmark from "./Bookmark";
 import Like from "./Like";
+import Share from "./Share";
 
 export default function PostCard({post}: {post: Post}) {
 
@@ -39,7 +40,7 @@ export default function PostCard({post}: {post: Post}) {
                    {post.commentsCount > 0 && <h4>{post.commentsCount}</h4>}
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
-                    <i className="fa-solid fa-share"></i>
+                    <Share post={post} />
                    {post.sharesCount > 0 && <h4>{post.sharesCount}</h4>}    
                 </div>
     

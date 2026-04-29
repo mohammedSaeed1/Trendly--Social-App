@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "./(components)/_Navbar/Navbar";
 import Footer from "./(components)/_Footer/Footer";
 import { Toast } from "@heroui/react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+// const geistSans = Geist({
+//   variable: "--font-geist-sans",
+//   subsets: ["latin"],
+// });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,7 +31,7 @@ export default function RootLayout({
     <Navbar/>
     <html
     lang="en"
-    className={`h-full antialiased ${geistSans.variable} ${geistMono.variable}`}
+    className={`h-full antialiased `}
     >
       <body className="min-h-full flex flex-col bg-[#081832]">{children}</body>
       <Toast.Provider placement="top"  />
