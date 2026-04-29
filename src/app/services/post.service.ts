@@ -1,14 +1,15 @@
-import { cookies } from "next/headers";
+// import { cookies } from "next/headers";
+import { getToken } from "../lib/auth";
 import { Post } from "../types/post.types";
 
- const cookie = await cookies();
- const token = cookie.get("usertoken")?.value;
+//  const cookie = await cookies();
+//  const token = cookie.get("usertoken")?.value;
 
-export async function getAllPosts() :Promise<Post[]>{
+export async function getAllPosts() :Promise<Post[] | undefined>{
   try{
     const res = await fetch("https://route-posts.routemisr.com/posts",{
      headers:{
-      Token : token || ""
+      Token : await getToken() || ""
      },
      next: {
       tags: ["posts"]
@@ -33,4 +34,6 @@ export async function getAllPosts() :Promise<Post[]>{
     hour12: true,
   });
 };
+
+
 

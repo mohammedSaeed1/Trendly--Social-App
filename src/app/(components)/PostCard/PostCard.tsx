@@ -1,10 +1,12 @@
 import { formatEgyptDate } from "@/app/services/post.service";
 import { Post } from "@/app/types/post.types";
 import { Avatar} from "@heroui/react";
-// import Image from "next/image";
+import Bookmark from "./Bookmark";
+import Like from "./Like";
 
 export default function PostCard({post}: {post: Post}) {
-       
+
+    
     return (
         <>
             <div className="bg-[#1D2E48] md:p-5 md:w-1/3 mx-auto my-2 rounded-lg border-4 border-[#2B3767]">
@@ -29,7 +31,7 @@ export default function PostCard({post}: {post: Post}) {
                 </main>
                 <footer className="flex items-center gap-x-5 justify-evenly p-1.5">
                 <div className="flex items-center gap-x-1 text-[#637188]">
-                    <i className="fa-regular fa-heart"></i>
+                    <Like postId={post._id} />
                   {post.likesCount > 0 && <h4>{post.likesCount}</h4>}  
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
@@ -40,8 +42,8 @@ export default function PostCard({post}: {post: Post}) {
                     <i className="fa-solid fa-share"></i>
                    {post.sharesCount > 0 && <h4>{post.sharesCount}</h4>}    
                 </div>
-                    <i className="fa-solid fa-bookmark text-[#637188] ms-auto"></i>
-
+    
+               <Bookmark postId={post._id} isBookmarked={post.bookmarked}/>
                 </footer>
             </div>
         </>
