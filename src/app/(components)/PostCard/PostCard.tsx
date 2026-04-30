@@ -4,9 +4,18 @@ import { Avatar} from "@heroui/react";
 import Bookmark from "./Bookmark";
 import Like from "./Like";
 import Share from "./Share";
+import { jwtDecode } from "jwt-decode";
+import { cookies } from "next/headers";
+import PostActionsMenu from "./PostActionsMenu";
 
-export default function PostCard({post}: {post: Post}) {
 
+
+export default async function PostCard({post}: {post: Post}) {
+    
+    const cookie = await cookies();
+    const token = cookie.get("usertoken")?.value;
+    const {user}:{user : string}  =jwtDecode(token);
+    
     
     return (
         <>
@@ -23,8 +32,7 @@ export default function PostCard({post}: {post: Post}) {
                         <h3 className="ms-1.5 text-gray-400 text-xs">{formatEgyptDate(post.createdAt)}</h3>
                     </div>
                     </div>
-                    <i className="fa-solid fa-ellipsis text-[#637188]"></i>
-            
+                 {user === post.user._id && <PostActionsMenu post= {post}/>}
                 </header>
                 <main className="p-1.5">
                    {post.body && <p className="text-red-400 wrap-break-word">{post.body}</p>}

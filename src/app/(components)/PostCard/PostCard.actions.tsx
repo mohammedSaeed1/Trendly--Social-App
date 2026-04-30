@@ -63,11 +63,56 @@ export async function sharePost(postId: string , bodyContent? : string) {
            revalidateTag("posts");
             return true
         }
-        else {
-            const data = await res.json();
-            console.log(data);
-            return false;
+        else return false;
+        
+    }
+    catch (error) {
+        console.log("From error", error);
+    }
+}
+
+
+export async function deletePost(postId: string) {
+    try {
+        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+            method: "DELETE",
+            headers: {
+                Token: await getToken() || "",
+            },
+            next: {
+                tags: ["posts"]
+            }
+        })
+        if (res.ok) {
+           revalidateTag("posts");
+            return true
         }
+        else return false;
+        
+    }
+    catch (error) {
+        console.log("From error", error);
+    }
+}
+
+
+export async function updatePost(postId: string , values : FormData) {
+    try {
+        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+            method: "PUT",
+            body: values,
+            headers: {
+                Token: await getToken() || "",
+            },
+            next: {
+                tags: ["posts"]
+            }
+        })
+        if (res.ok) {
+           revalidateTag("posts");
+            return true;
+        }
+        else return false;
     }
     catch (error) {
         console.log("From error", error);

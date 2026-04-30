@@ -75,7 +75,7 @@ export default function CreatePost() {
                 >
                     <Modal.Backdrop variant="blur">
                         <Modal.Container>
-                            <Modal.Dialog className="sm:max-w-90">
+                            <Modal.Dialog className="sm:max-w-90 bg-[#3A4960]">
                                 <Modal.CloseTrigger />
                                 <Modal.Header>
                                     <Avatar>
@@ -84,7 +84,7 @@ export default function CreatePost() {
                                     </Avatar>
                                 </Modal.Header>
                                 <Modal.Body>
-                                    <TextArea ref={postContent} className=" w-full bg-[#3A4960] text-white placeholder:text-gray-100" placeholder="What do you think about? " />
+                                    <TextArea ref={postContent} className=" focus:ring-0 resize-none w-full bg-[#3A4960] text-white placeholder:text-gray-100" placeholder="What do you think about? " />
                                     {imagePreview && <div className="relative"><Image src={imagePreview} alt="Image" width={300} height={300} />
                                         <i onClick={handleRemoveImage} className="fa-solid fa-close absolute top-1 right-2 bg-gray-100 cursor-pointer "></i>
                                     </div>}
