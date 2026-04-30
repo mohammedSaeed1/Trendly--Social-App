@@ -35,5 +35,23 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
   });
 };
 
+export async function getSinglePost(postId: string) {
+    try {
+        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+            method: "GET",
+            headers: {
+                Token: await getToken() || "",
+            },
+        })
+        if (res.ok) {  
+            const data = await res.json();
+            return data.data.post;
+        }
+        else return false;
+    }
+    catch (error) {
+        console.log("From error", error);
+    }
+}
 
 

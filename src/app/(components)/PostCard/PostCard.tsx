@@ -7,7 +7,7 @@ import Share from "./Share";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import PostActionsMenu from "./PostActionsMenu";
-
+import Comment from "./Comment";
 
 
 export default async function PostCard({post}: {post: Post}) {
@@ -44,7 +44,7 @@ export default async function PostCard({post}: {post: Post}) {
                   {post.likesCount > 0 && <h4>{post.likesCount}</h4>}  
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
-                   <i className="fa-regular fa-comment"></i>
+                    <Comment postId={post._id} />
                    {post.commentsCount > 0 && <h4>{post.commentsCount}</h4>}
                 </div>
                  <div className="flex items-center gap-x-1 text-[#637188]">
