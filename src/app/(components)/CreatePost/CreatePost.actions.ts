@@ -13,8 +13,9 @@ export async function createPost(values : FormData){
     }
   })
 
-    // const data = await res.json();
-    if(res.ok){
+  if(res.ok){
+      const data = await res.json();
+      console.log("From create post action",data);
       revalidateTag("posts");
       return true;  
     } 

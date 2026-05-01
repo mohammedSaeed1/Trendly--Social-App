@@ -45,6 +45,7 @@ export async function getSinglePost(postId: string) {
         })
         if (res.ok) {  
             const data = await res.json();
+            console.log(data.data.post);
             return data.data.post;
         }
         else return false;

@@ -33,7 +33,7 @@ export default function RootLayout({
     lang="en"
     className={`h-full antialiased `}
     >
-      <body className="min-h-full flex flex-col bg-[#081832]">{children}</body>
+      <body className="min-h-full flex flex-col">{children}</body>
       <Toast.Provider placement="top"  />
     </html>
     <Footer/>
