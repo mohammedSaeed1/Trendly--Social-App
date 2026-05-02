@@ -170,6 +170,8 @@ export default function Comments({
                     Reply
                   </button>
 
+
+                  {post.user._id === comment.commentCreator._id && <>
                   <button
                     onClick={() => handleInputForUpdate(comment._id)}
                     className="font-semibold cursor-pointer"
@@ -183,6 +185,8 @@ export default function Comments({
                   >
                     Delete
                   </button>
+                  </>}
+
 
                   {comment.repliesCount > 0 && (
                     <button
