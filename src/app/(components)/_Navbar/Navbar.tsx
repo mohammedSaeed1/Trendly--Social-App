@@ -22,11 +22,10 @@ export default function Navbar() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
-
   const panelRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
-  const pathName = usePathname();
   
+  const pathName = usePathname();  
   // ── On mount: fetch just the count ──
   useEffect(() => {
     fetchUnreadCount();

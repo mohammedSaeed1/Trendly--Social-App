@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import PostActionsMenu from "./PostActionsMenu";
 import Comment from "./Comment";
+import Link from "next/link";
 
 
 export default async function PostCard({post}: {post: Post}) {
@@ -19,14 +20,16 @@ export default async function PostCard({post}: {post: Post}) {
     
     return (
         <>
-            <div className="bg-[#1D2E48] md:p-5 md:w-1/3 mx-auto my-2 rounded-lg border-4 border-[#2B3767]">
+            <div className="bg-[#1D2E48] md:p-5 w-full mx-auto my-2 rounded-lg border-4 border-[#2B3767]">
 
                 <header className="flex justify-between items-center p-1.5">
                     <div className="flex">
+                        <Link href={`/profile/${post.user._id}`}>
                     <Avatar>
                         <Avatar.Image alt={post.user.name} src={post.user.photo} />
                         <Avatar.Fallback>{post.user.name}</Avatar.Fallback>
                     </Avatar>
+                        </Link>
                     <div>
                         <h2 className="ms-1.5 text-white">{post.user.name}</h2>
                         <h3 className="ms-1.5 text-gray-400 text-xs">{formatEgyptDate(post.createdAt)}</h3>
