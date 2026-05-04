@@ -15,3 +15,18 @@ export async function uploadProfilePhoto(photo : FormData){
         return true;
     }
 }
+
+export async function getBookmarks(){
+    const res = await fetch(`https://route-posts.routemisr.com/users/bookmarks`,{
+        headers:{
+            Token: await getToken() || ""
+        },
+        next:{
+            tags: ["getBookmarks"]
+        }
+    })
+    if(res.ok){
+        const data = await res.json();
+        return data.data.bookmarks;
+    }
+}

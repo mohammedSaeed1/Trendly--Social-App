@@ -12,13 +12,7 @@ import { toast } from "@heroui/react";
 import { useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
 
-export default function Comments({
-  comments,
-  post,
-}: {
-  comments: Comment[];
-  post: Post;
-}) {
+export default function Comments({comments,post,}: {comments: Comment[];post: Post;}) {
   const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(
     null
   );

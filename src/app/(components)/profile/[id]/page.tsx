@@ -6,7 +6,6 @@ import { Post } from "@/app/types/post.types";
 import PostCard from "../../PostCard/PostCard";
 import BookmarkPosts from "../../Bookmark/BookmarkPosts";
 
-
 function joinedDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "long",
@@ -14,86 +13,127 @@ function joinedDate(iso: string) {
   });
 }
 
-// ─── Component ────────────────────────────────────────────────────────────────
-
-export default async function ProfileCard({params}:{params: Promise<{id : string}>}){
-
+export default async function ProfileCard({params}: {params: Promise<{ id: string }>}) {
   const id = (await params).id;
-  const userProfile : UserProfile = await getUserProfile(id);
-  const userPosts : Post[]  = await getUserPosts(id);
+  const userProfile: UserProfile = await getUserProfile(id);
+  const userPosts: Post[] = await getUserPosts(id);
 
-  
-    const hasCover = userProfile?.user?.cover && userProfile?.user?.cover.trim() !== "";
+  console.log("userprofile", userProfile);
 
-    
+  const hasCover =
+    userProfile?.user?.cover &&
+    userProfile?.user?.cover.trim() !== "";
 
   return (
-    <>
-    <div className="w-full max-w-sm overflow-hidden rounded-xl border border-separator bg-background">
+    <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8">
 
-      <div className="relative h-20 bg-background-secondary">
-        {hasCover && (
-          <Image src={userProfile?.user?.cover} alt="cover" fill className="object-cover" />
-        )}
-      </div> 
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-      <div className="relative px-5 pb-5">                   
-       <UploadProfilePhoto user={userProfile}/>
+        {/* Sidebar */}
+        <aside className="lg:col-span-4">
+          <div className="sticky top-6 space-y-6">
 
-        <div className="pt-10">
+            {/* Profile Card */}
+            <div className="overflow-hidden rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
 
-          <div className="mb-4 flex items-start justify-between">
-            <div>
-              <p className="text-[17px] font-semibold text-primary">{userProfile?.user?.name}</p>
-              <p className="mt-0.5 text-sm text-secondary">@{userProfile?.user?.username}</p>
-            </div>
-              {/* {userProfile?.isFollowing && <span className="mt-0.5 rounded-md bg-background-secondary px-2.5 py-1 text-xs capitalize text-secondary">
-                  Following
-            </span> } */}
-           
-            <span className="mt-0.5 rounded-md bg-background-secondary px-2.5 py-1 text-xs capitalize text-secondary">
-              {userProfile?.user?.gender}
-            </span>
-          </div>
-
-          {/* ── Stats ── */}
-          <div className="mb-4 grid grid-cols-3 gap-2">
-            {[
-              { label: "Followers", value: userProfile?.user?.followersCount },
-              { label: "Following", value: userProfile?.user?.followingCount },
-              { label: "Bookmarks", value: userProfile?.user?.bookmarksCount },
-            ].map(({ label, value }) => (
-              <div
-                key={label}
-                className="rounded-lg border border-separator bg-background-secondary px-3 py-2.5 text-center"
-              >
-                <p className="text-base font-semibold text-primary">{value}</p>
-                <p className="mt-0.5 text-[11px] text-secondary">{label}</p>
+              {/* Cover */}
+              <div className="relative h-28 bg-white/5">
+                {hasCover && (
+                  <Image
+                    src={userProfile.user.cover}
+                    alt="cover"
+                    fill
+                    className="object-cover"
+                  />
+                )}
               </div>
-            ))}
-          </div>
 
-          {/* ── Meta ── */}
-          <div className="flex flex-col gap-2 border-t border-separator pt-3">
-            <div className="flex items-center gap-2">
-             <i className="fa-solid fa-envelope"></i>
-              <span className="text-sm text-secondary">{userProfile?.user?.email}</span>
-            </div>
-              <div className="flex items-center gap-2">
-             <i className="fa-solid fa-cake-candles"></i>
-              <span className="text-sm text-secondary">{userProfile?.user?.dateOfBirth.slice(0,10)}</span>
-            </div>
-            <div className="flex items-center gap-2">
-             <i className="fa-solid fa-calendar"></i>
-              <span className="text-sm text-secondary">Joined {joinedDate(userProfile?.user?.createdAt)}</span>
-            </div>
-          </div>
+              {/* Content */}
+              <div className="relative px-5 pb-6">
 
-        </div>
+                {/* Avatar */}
+                <div className="absolute -top-10 left-5">
+                  <UploadProfilePhoto user={userProfile} />
+                </div>
+
+                <div className="pt-14">
+
+                  {/* Name */}
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <p className="text-lg font-semibold text-white">
+                        {userProfile.user.name}
+                      </p>
+                      <p className="text-sm text-slate-400">
+                        @{userProfile.user.username}
+                      </p>
+                    </div>
+
+                    <span className="rounded-md bg-white/10 px-2.5 py-1 text-xs text-slate-300 capitalize">
+                      {userProfile.user.gender}
+                    </span>
+                  </div>
+
+                  {/* Stats */}
+                  <div className="grid grid-cols-3 gap-3 mb-5">
+                    {[
+                      { label: "Followers", value: userProfile.user.followersCount },
+                      { label: "Following", value: userProfile.user.followingCount },
+                      { label: "Bookmarks", value: userProfile.user.bookmarksCount },
+                    ].map(({ label, value }) => (
+                      <div
+                        key={label}
+                        className="rounded-xl bg-white/5 border border-white/10 py-3 text-center"
+                      >
+                        <p className="text-white font-semibold">
+                          {value}
+                        </p>
+                        <p className="text-xs text-slate-400">
+                          {label}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Meta */}
+                  <div className="space-y-2 border-t border-white/10 pt-4 text-sm text-slate-400">
+                    
+                    <div className="flex items-center gap-2">
+                      <i className="fa-solid fa-envelope text-indigo-400"></i>
+                      {userProfile.user.email}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <i className="fa-solid fa-cake-candles text-indigo-400"></i>
+                      {userProfile.user.dateOfBirth.slice(0, 10)}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <i className="fa-solid fa-calendar text-indigo-400"></i>
+                      Joined {joinedDate(userProfile.user.createdAt)}
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bookmarks */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-4">
+              <BookmarkPosts />
+            </div>
+
+          </div>
+        </aside>
+
+        {/* Posts */}
+        <main className="lg:col-span-8 space-y-6">
+          {userPosts?.map((post) => (
+            <PostCard key={post._id} post={post} />
+          ))}
+        </main>
+
       </div>
-    </div>
-    <BookmarkPosts/>
-      {userPosts?.map(post => <PostCard key={post._id} post={post}/> )}  
-    </>
+    </section>
   );
 }

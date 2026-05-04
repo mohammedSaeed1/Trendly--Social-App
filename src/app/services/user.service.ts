@@ -63,20 +63,5 @@ export async function getUserPosts(userId : string){
     }
 }
 
-export async function getBookmarks(){
-    const res = await fetch(`https://route-posts.routemisr.com/users/bookmarks`,{
-        headers:{
-            Token: await getToken() || ""
-        },
-        next:{
-            tags: ["getBookmarks"]
-        }
-    })
-    if(res.ok){
-        const data = await res.json();
-        console.log(data.data.bookmarks);
-        return data.data.bookmarks;
-    }
-}
 
 
