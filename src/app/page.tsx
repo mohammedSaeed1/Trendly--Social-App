@@ -1,8 +1,8 @@
 import { getAllPosts } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
-import SuggestedUsersSection from "./(components)/SuggestedUsers/SuggestedUsers";
 import { getFollowSuggestions, getMyProfile } from "./services/user.service";
+import SuggestedUsers from "./(components)/SuggestedUsers/SuggestedUsers";
 
 export default async function Home() {
 
@@ -17,7 +17,7 @@ export default async function Home() {
     <section>
       <header>
       <CreatePost user = {loggedUser}/>
-      <SuggestedUsersSection suggestions = {followSuggestions} />
+      <SuggestedUsers suggestions = {followSuggestions} />
       </header>
       <main className="flex justify-between">
         <div className="w-1/3">
