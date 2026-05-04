@@ -72,7 +72,7 @@ export default async function PostCard({ post }: { post: Post }) {
       </main>
 
       {/* Footer */}
-      <footer className="flex items-center justify-between px-4 py-3 border-t border-white/10">
+      <footer className="flex items-center justify-between px-4 py-1.5 border-t border-white/10">
 
         <div className="flex items-center gap-6 py-1 text-slate-400">
 
