@@ -2,11 +2,11 @@ import { getAllPosts } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
 import SuggestedUsersSection from "./(components)/SuggestedUsers/SuggestedUsers";
-import { getFollowSuggestions } from "./services/user.service";
+import { getFollowSuggestions, getMyProfile } from "./services/user.service";
 
 export default async function Home() {
 
-
+  const loggedUser = await getMyProfile();
   const posts = await getAllPosts();
   const followSuggestions = await getFollowSuggestions();
   
@@ -16,7 +16,7 @@ export default async function Home() {
     <>
     <section>
       <header>
-      <CreatePost/>
+      <CreatePost user = {loggedUser}/>
       <SuggestedUsersSection suggestions = {followSuggestions} />
       </header>
       <main className="flex justify-between">

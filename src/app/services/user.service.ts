@@ -17,6 +17,18 @@ export async function getUserProfile(userId : string){
     }
 }
 
+export async function getMyProfile(){
+    const res = await fetch(`https://route-posts.routemisr.com/users/profile-data`,{
+        headers:{
+            Token: await getToken() || ""
+        }
+    })
+    if(res.ok){
+        const data = await res.json();
+        return data.data.user;
+    }
+}
+
 export async function getFollowSuggestions(){
     const res = await fetch(`https://route-posts.routemisr.com/users/suggestions`,{
         headers:{
