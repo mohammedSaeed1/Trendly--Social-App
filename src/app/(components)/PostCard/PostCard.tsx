@@ -35,9 +35,11 @@ export default async function PostCard({ post }: { post: Post }) {
           </Link>
 
           <div>
+            <Link href={`/profile/${post.user._id}`}>
             <h2 className="text-white font-semibold text-sm">
               {post.user.name}
             </h2>
+            </Link>
             <p className="text-slate-400 text-xs">
               {formatEgyptDate(post.createdAt)}
             </p>
