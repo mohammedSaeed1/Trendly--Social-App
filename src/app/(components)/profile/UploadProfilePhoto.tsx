@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { uploadProfilePhoto } from "./profile.actions";
 
-export function UploadProfilePhoto({ user }: { user: UserProfile }) {
+export function UploadProfilePhoto({ user , loggedInUserId }: { user: UserProfile , loggedInUserId : string }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -44,8 +44,8 @@ export function UploadProfilePhoto({ user }: { user: UserProfile }) {
             {/* ── Avatar trigger ── */}
             <div className="absolute -top-8 left-5 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-[3px] border-background bg-blue-100 text-xl font-semibold text-blue-700">
                 <Image
-                    src={user?.user?.photo}
-                    alt={user?.user?.name}
+                    src={user?.photo}
+                    alt={user?.name}
                     width={64}
                     height={64}
                     className="h-full w-full cursor-pointer object-cover"
@@ -76,8 +76,8 @@ export function UploadProfilePhoto({ user }: { user: UserProfile }) {
                             <Modal.Body className="flex flex-col items-center gap-4 px-5 py-6">
                                 <div className="relative h-52 w-52 overflow-hidden rounded-full ring-4 ring-gray-100">
                                     <Image
-                                        src={imagePreview ?? user?.user?.photo}
-                                        alt={user?.user?.name}
+                                        src={imagePreview ?? user?.photo}
+                                        alt={user?.name}
                                         fill
                                         className="object-cover"
                                     />
@@ -85,8 +85,8 @@ export function UploadProfilePhoto({ user }: { user: UserProfile }) {
 
                                 {/* Name below avatar */}
                                 <div className="text-center">
-                                    <p className="text-base font-semibold text-gray-800">{user?.user?.name}</p>
-                                    <p className="text-sm text-gray-400">@{user?.user?.username}</p>
+                                    <p className="text-base font-semibold text-gray-800">{user?.name}</p>
+                                    <p className="text-sm text-gray-400">@{user?.username}</p>
                                 </div>
                             </Modal.Body>
 
@@ -94,7 +94,7 @@ export function UploadProfilePhoto({ user }: { user: UserProfile }) {
                             <Modal.Footer className="flex items-center justify-between border-t border-gray-100 px-5 py-4">
 
                                 {/* Upload new photo */}
-                                <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100">
+                                {loggedInUserId === user._id &&  <label className="flex cursor-pointer items-center gap-2 rounded-lg bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-100">
                                     <i className="fa-regular fa-image text-base" />
                                     Upload photo
                                     <input
@@ -104,8 +104,8 @@ export function UploadProfilePhoto({ user }: { user: UserProfile }) {
                                         accept="image/*"
                                         hidden
                                     />
-                                </label>
-
+                                </label>}
+                                
                                 {/* Remove preview — only shown when a new image is selected */}
                                 {imagePreview && (
                                     <>

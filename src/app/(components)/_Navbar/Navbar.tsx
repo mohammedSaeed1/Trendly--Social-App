@@ -1,16 +1,22 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import NotificationPanel from "../Notifications/Notifications";
-import { getUnreadCount, getNotifications, markNotificationAsRead, markAllAsRead } from "../Notifications/Notifications.actions";
+import {
+  getUnreadCount,
+  getNotifications,
+  markNotificationAsRead,
+  markAllAsRead,
+} from "../Notifications/Notifications.actions";
 
-const navbarLinks: { label: string; href: string }[] = [
+const navbarLinks = [
   { label: "Home", href: "/" },
   { label: "Profile", href: "/profile" },
 ];
 
-const navbarLinksOnMobile: { label: string; href: string }[] = [
+const navbarLinksOnMobile = [
   { label: "Home", href: "/" },
   { label: "Profile", href: "/profile" },
   { label: "Login", href: "/login" },
@@ -22,16 +28,17 @@ export default function Navbar() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
+
   const panelRef = useRef<HTMLDivElement>(null);
   const bellRef = useRef<HTMLButtonElement>(null);
-  
-  const pathName = usePathname();  
-  // ── On mount: fetch just the count ──
+
+  const pathName = usePathname();
+
+  // ── Fetch unread count on mount ──
   useEffect(() => {
     fetchUnreadCount();
   }, []);
 
-  
   async function fetchUnreadCount() {
     const count = await getUnreadCount();
     setUnreadCount((prev) => (prev === count ? prev : count));
@@ -49,10 +56,11 @@ export default function Navbar() {
         setIsPanelOpen(false);
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   async function fetchNotifications() {
     const data = await getNotifications();
@@ -62,103 +70,101 @@ export default function Navbar() {
   function handleBellClick() {
     const opening = !isPanelOpen;
     setIsPanelOpen(opening);
+
     if (opening) {
       fetchNotifications();
     }
   }
 
   function handleMarkAsRead(id: string) {
-    setNotifications((prev) =>
-      prev.map((n: any) => (n._id === id ? { ...n, isRead: true } : n))
+    setNotifications((prev: any[]) =>
+      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
     );
+
     setUnreadCount((prev) => Math.max(0, prev - 1));
-     markNotificationAsRead(id);
+    markNotificationAsRead(id);
   }
 
   function handleMarkAllAsRead() {
-    setNotifications((prev) => prev.map((n: any) => ({ ...n, isRead: true })));
+    setNotifications((prev: any[]) =>
+      prev.map((n) => ({ ...n, isRead: true }))
+    );
     setUnreadCount(0);
     markAllAsRead();
   }
 
   return (
     <>
-      <nav className="sticky top-0 z-40 w-full border-b border-separator bg-background/70 backdrop-blur-lg">
-        <header className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-          {/* ── Left: hamburger + logo ── */}
+      {/* ───────── NAVBAR ───────── */}
+      <nav className="sticky top-0 z-40 w-full border-b border-white/10 bg-white/5 backdrop-blur-xl">
+        <header className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+
+          {/* Left */}
           <div className="flex items-center gap-4">
             <button
-              className="md:hidden cursor-pointer"
+              className="md:hidden text-slate-300 hover:text-white transition"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMenuOpen}
             >
-              <span className="sr-only">Menu</span>
-              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              <i className="fa-solid fa-bars text-lg"></i>
             </button>
-            <p className="font-bold">Trendly Social app</p>
+
+            <h1 className="text-lg font-bold text-white tracking-wide">
+              <span className="text-indigo-400">Trendly</span>
+            </h1>
           </div>
 
-          {/* ── Center: nav links ── */}
-          <ul className="hidden items-center gap-4 md:flex">
+          {/* Center */}
+          <ul className="hidden md:flex items-center gap-6">
             {navbarLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`block py-2 ${pathName === link.href ? "font-medium text-accent" : ""}`}
+                  className={`relative text-sm transition ${
+                    pathName === link.href
+                      ? "text-white"
+                      : "text-slate-400 hover:text-white"
+                  }`}
                 >
                   {link.label}
+
+                  {pathName === link.href && (
+                    <span className="absolute left-0 -bottom-1 h-[2px] w-full bg-indigo-400 rounded-full"></span>
+                  )}
                 </Link>
               </li>
             ))}
           </ul>
 
-          {/* ── Right: bell + auth ── */}
+          {/* Right */}
           <div className="flex items-center gap-4">
 
-            {/* Bell icon */}
+            {/* Bell */}
             <button
               ref={bellRef}
               onClick={handleBellClick}
-              aria-label="Notifications"
-              className="relative cursor-pointer rounded-full p-2 transition-colors hover:bg-black/5"
+              className="relative rounded-full p-2 text-slate-300 hover:text-white hover:bg-white/10 transition"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill={isPanelOpen ? "currentColor" : "none"}
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
+              <i className="fa-regular fa-bell text-lg"></i>
 
-              {/* Unread badge */}
               {unreadCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white leading-none">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-indigo-500 px-1 text-[10px] font-bold text-white">
                   {unreadCount > 99 ? "99+" : unreadCount}
                 </span>
               )}
             </button>
 
-            <div className="hidden items-center gap-4 md:flex">
-              <Link href="/login" className="font-medium text-accent">
+            {/* Auth */}
+            <div className="hidden md:flex items-center gap-3">
+              <Link
+                href="/login"
+                className="text-sm text-slate-300 hover:text-white transition"
+              >
                 Login
               </Link>
+
               <Link
                 href="/register"
-                className="font-medium text-accent bg-amber-300 rounded-xl px-2"
+                className="rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-1.5 text-sm font-medium transition"
               >
                 Sign Up
               </Link>
@@ -166,15 +172,19 @@ export default function Navbar() {
           </div>
         </header>
 
-        {/* Mobile menu */}
+        {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="border-t border-separator md:hidden">
+          <div className="md:hidden border-t border-white/10 bg-white/5 backdrop-blur-xl">
             <ul className="flex flex-col gap-2 p-4">
               {navbarLinksOnMobile.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`block py-2 ${pathName === link.href ? "font-medium text-accent" : ""}`}
+                    className={`block py-2 text-sm ${
+                      pathName === link.href
+                        ? "text-white"
+                        : "text-slate-400"
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -185,18 +195,20 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* ── Notification panel dropdown ── */}
+      {/* ───────── NOTIFICATION PANEL ───────── */}
       {isPanelOpen && (
         <div
           ref={panelRef}
-          className="fixed right-4 top-18 z-50 md:absolute md:right-6"
+          className="fixed right-4 top-[72px] z-50 w-[350px]"
         >
-          <NotificationPanel
-            notifications={notifications}
-            unreadCount={unreadCount}
-            onMarkAsRead={handleMarkAsRead}
-            onMarkAllAsRead={handleMarkAllAsRead}
-          />
+          <div className="rounded-2xl border border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-2xl">
+            <NotificationPanel
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+            />
+          </div>
         </div>
       )}
     </>

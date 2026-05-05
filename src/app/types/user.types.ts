@@ -1,8 +1,4 @@
 export interface UserProfile {
-  isFollowing: boolean,
-  user : UserProfilee
-}
-export interface UserProfilee {
   _id: string;
   name: string;
   username: string;

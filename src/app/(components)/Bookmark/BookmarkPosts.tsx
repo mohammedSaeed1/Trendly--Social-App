@@ -54,11 +54,13 @@ export default function BookmarkPosts() {
             </p>
           )}
 
+
+
           {bookmarks && bookmarks.length > 0 && (
             <div className="space-y-4">
               {bookmarks.map((post) => (
                 <div key={post._id} className="rounded-xl shadow-sm p-3">
-                  <PostCardUI post={post} userId={post.user._id}/>
+                  <PostCardUI post={post} userId={post.user._id}/> 
                 </div>
               ))}
             </div>

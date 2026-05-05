@@ -12,8 +12,7 @@ export async function getUserProfile(userId : string){
     })
     if(res.ok){
         const data = await res.json();
-        console.log(data.data.user);
-        return data.data;
+        return data.data.user;
     }
 }
 

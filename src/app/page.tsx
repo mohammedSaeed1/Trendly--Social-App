@@ -3,6 +3,7 @@ import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
 import { getFollowSuggestions, getMyProfile } from "./services/user.service";
 import SuggestedUsers from "./(components)/SuggestedUsers/SuggestedUsers";
+import Link from "next/link";
 
 export default async function Home() {
   const loggedUser = await getMyProfile();
@@ -25,6 +26,7 @@ export default async function Home() {
               <p className="text-slate-400 text-sm">
                 {loggedUser?.name}
               </p>
+              <Link href={`/profile/${loggedUser._id}`}>Profile</Link>
             </div>
 
           </div>
