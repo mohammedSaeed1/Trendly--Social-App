@@ -1,33 +1,21 @@
 "use client";
 
 import { Comment } from "@/app/types/comment.types";
-import {
-  addLikeAndUnlikeComment,
-  createReply,
-  deleteComment,
-  getCommentReplies,
-  updateComment,
-} from "../PostCard/PostCard.actions";
+import {addLikeAndUnlikeComment,createReply,deleteComment,getCommentReplies,updateComment} from "../PostCard/PostCard.actions";
 import { toast } from "@heroui/react";
 import { useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
 
-export default function Comments({comments,post,}: {comments: Comment[];post: Post;}) {
-  const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(
-    null
-  );
-
-  const [activeReplyCommentId, setActiveReplyCommentId] =
-    useState<string | null>(null);
-
-  const [visibleRepliesCommentId, setVisibleRepliesCommentId] = useState<
-    string | null
-  >(null);
-
+export default function Comments({comments,post,loggedUserId}: {comments: Comment[],post: Post , loggedUserId : string}) {
+  const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(null);
+  const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null);
+  const [visibleRepliesCommentId, setVisibleRepliesCommentId] = useState<string | null>(null);
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
-
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
+
+
+ 
 
   function handleInputForUpdate(commentId: string) {
     setActiveEditCommentId((prev) => (prev === commentId ? null : commentId));
@@ -40,20 +28,16 @@ export default function Comments({comments,post,}: {comments: Comment[];post: Po
   }
 
   async function handleUpdateComment(commentId: string) {
-    const updatedContent = new FormData();
+    const formData = new FormData();
 
     if (editContentInput.current?.value) {
-      updatedContent.append("content", editContentInput.current.value);
+      formData.append("content", editContentInput.current.value);
     }
 
-    const isUpdatedSuccessfully = await updateComment(
-      post._id,
-      commentId,
-      updatedContent
-    );
+    const ok = await updateComment(post._id, commentId, formData);
 
-    if (isUpdatedSuccessfully) {
-      toast.success("Comment updated successfully");
+    if (ok) {
+      toast.success("Comment updated");
       if (editContentInput.current) editContentInput.current.value = "";
       setActiveEditCommentId(null);
     } else {
@@ -62,42 +46,36 @@ export default function Comments({comments,post,}: {comments: Comment[];post: Po
   }
 
   async function handleDeleteComment(commentId: string) {
-    const isDeletedSuccessfully = await deleteComment(post._id, commentId);
+    const ok = await deleteComment(post._id, commentId);
 
-    if (isDeletedSuccessfully) {
-      toast.success("Comment deleted successfully");
+    if (ok) {
+      toast.success("Comment deleted");
     } else {
-      toast.danger("Comment was not deleted");
+      toast.danger("Failed to delete");
     }
   }
 
-  async function handleAddLikeAndUnlike(commentId: string) {
-    const isSuccessfully = await addLikeAndUnlikeComment(post._id, commentId);
+  async function handleLike(commentId: string) {
+    const ok = await addLikeAndUnlikeComment(post._id, commentId);
 
-    if (!isSuccessfully) {
-      toast.danger("Can't like this comment");
-    }
+    if (!ok) toast.danger("Like failed");
   }
 
   async function handleReplySubmit(commentId: string) {
-    const formObj = new FormData();
+    const formData = new FormData();
 
     if (replyContentInput.current?.value) {
-      formObj.append("content", replyContentInput.current.value);
+      formData.append("content", replyContentInput.current.value);
     }
 
-    const isCreatedSuccessfully = await createReply(
-      post._id,
-      commentId,
-      formObj
-    );
+    const ok = await createReply(post._id, commentId, formData);
 
-    if (isCreatedSuccessfully) {
-      toast.success("Reply added successfully");
+    if (ok) {
+      toast.success("Reply added");
       if (replyContentInput.current) replyContentInput.current.value = "";
       setActiveReplyCommentId(null);
     } else {
-      toast.danger("Failed to add reply to this comment!!");
+      toast.danger("Failed to reply");
     }
   }
 
@@ -108,14 +86,11 @@ export default function Comments({comments,post,}: {comments: Comment[];post: Po
     }
 
     if (!replies[commentId]) {
-      const fetchedReplies: Comment[] = await getCommentReplies(
-        post._id,
-        commentId
-      );
+      const data = await getCommentReplies(post._id, commentId);
 
       setReplies((prev) => ({
         ...prev,
-        [commentId]: fetchedReplies,
+        [commentId]: data,
       }));
     }
 
@@ -126,98 +101,88 @@ export default function Comments({comments,post,}: {comments: Comment[];post: Po
     <div className="space-y-6">
       {comments.map((comment) => (
         <div key={comment._id} className="flex gap-3">
+
           {/* Avatar */}
           <img
             src={comment.commentCreator.photo}
             alt={comment.commentCreator.name}
-            className="w-8 h-8 rounded-full object-cover"
+            className="rounded-full w-9 h-9 object-cover"
           />
 
           <div className="flex-1">
-            {/* Main Comment */}
-            <div className="flex justify-between items-start gap-2">
-              <div className="flex-1">
-                <p className="text-sm leading-6 break-words">
-                  <span className="font-semibold text-sm mr-2 cursor-pointer">
-                    {comment.commentCreator.name}
-                  </span>
 
-                  <span className="text-gray-800">{comment.content}</span>
-                </p>
+            {/* Comment Bubble */}
+            <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 backdrop-blur-md">
+              <p className="text-sm text-white leading-relaxed">
+                <span className="font-semibold mr-2">
+                  {comment.commentCreator.name}
+                </span>
+                {comment.content}
+              </p>
+            </div>
 
-                <div className="flex items-center gap-4 mt-1 text-xs text-gray-500 flex-wrap">
-                  <span>
-                    {new Date(comment.createdAt).toLocaleDateString("en-EG", {
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </span>
+            {/* Actions */}
+            <div className="flex items-center gap-4 mt-2 text-xs text-slate-400 flex-wrap">
 
-                  <span>
-                    {comment.likes.length > 0 && `${comment.likes.length} likes`}
-                  </span>
+              <span>
+                {new Date(comment.createdAt).toLocaleDateString("en-EG")}
+              </span>
 
-                  <button
-                    onClick={() => handleReplyInput(comment._id)}
-                    className="font-semibold cursor-pointer"
-                  >
-                    Reply
-                  </button>
+              {comment.likes.length > 0 && (
+                <span>{comment.likes.length} likes</span>
+              )}
 
+              <button
+                onClick={() => handleReplyInput(comment._id)}
+                className="hover:text-indigo-400 transition"
+              >
+                Reply
+              </button>
 
-                  {post.user._id === comment.commentCreator._id && <>
+              { loggedUserId === comment.commentCreator._id && (
+                <>
                   <button
                     onClick={() => handleInputForUpdate(comment._id)}
-                    className="font-semibold cursor-pointer"
+                    className="hover:text-indigo-400 transition"
                   >
-                    Update
+                    Edit
                   </button>
 
                   <button
                     onClick={() => handleDeleteComment(comment._id)}
-                    className="font-semibold cursor-pointer text-red-500"
+                    className="text-red-400 hover:text-red-500 transition"
                   >
                     Delete
                   </button>
-                  </>}
+                </>
+              )}
 
-
-                  {comment.repliesCount > 0 && (
-                    <button
-                      onClick={() => displayReplies(comment._id)}
-                      className="font-semibold cursor-pointer"
-                    >
-                      {visibleRepliesCommentId === comment._id
-                        ? "Hide replies"
-                        : `View replies (${comment.repliesCount})`}
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Like */}
-              <button className="pt-1">
-                <i
-                  onClick={() => handleAddLikeAndUnlike(comment._id)}
-                  className="fa-regular fa-heart cursor-pointer text-sm"
-                ></i>
-              </button>
+              {comment.repliesCount > 0 && (
+                <button
+                  onClick={() => displayReplies(comment._id)}
+                  className="hover:text-indigo-400 transition"
+                >
+                  {visibleRepliesCommentId === comment._id
+                    ? "Hide replies"
+                    : `View replies (${comment.repliesCount})`}
+                </button>
+              )}
             </div>
 
-            {/* Update Input */}
+            {/* Edit Input */}
             {activeEditCommentId === comment._id && (
               <div className="flex items-center gap-2 mt-3">
                 <input
                   ref={editContentInput}
-                  placeholder="Update your comment..."
-                  className="flex-1 border rounded-full px-4 py-2 text-sm outline-none"
+                  placeholder="Update comment..."
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none"
                 />
 
                 <button
                   onClick={() => handleUpdateComment(comment._id)}
-                  className="text-blue-500"
+                  className="text-indigo-400 hover:text-indigo-300"
                 >
-                  <i className="fa-regular fa-paper-plane text-lg cursor-pointer"></i>
+                  <i className="fa-solid fa-paper-plane"></i>
                 </button>
               </div>
             )}
@@ -228,64 +193,63 @@ export default function Comments({comments,post,}: {comments: Comment[];post: Po
                 <input
                   ref={replyContentInput}
                   placeholder={`Reply to ${comment.commentCreator.name}...`}
-                  className="flex-1 border rounded-full px-4 py-2 text-sm outline-none"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none"
                 />
 
                 <button
                   onClick={() => handleReplySubmit(comment._id)}
-                  className="text-blue-500"
+                  className="text-indigo-400 hover:text-indigo-300"
                 >
-                  <i className="fa-regular fa-paper-plane text-lg cursor-pointer"></i>
+                  <i className="fa-solid fa-paper-plane"></i>
                 </button>
               </div>
             )}
 
             {/* Replies */}
             {visibleRepliesCommentId === comment._id && (
-              <div className="ml-4 mt-3 border-l border-gray-200 pl-4 space-y-3">
+              <div className="ml-4 mt-3 space-y-3 border-l border-white/10 pl-4">
                 {replies[comment._id]?.length > 0 ? (
                   replies[comment._id].map((reply) => (
                     <div
                       key={reply._id}
-                      className="rounded-xl bg-gray-50 p-3 shadow-sm transition hover:bg-gray-100"
+                      className="bg-white/5 border border-white/10 rounded-lg p-3 backdrop-blur-md"
                     >
                       <div className="flex items-start gap-3">
-                        <img
-                          src={reply.commentCreator?.photo}
-                          alt={reply.commentCreator?.name}
-                          className="h-10 w-10 rounded-full object-cover border border-gray-200"
-                        />
+
+                        <img src={reply.commentCreator.photo} alt={reply.commentCreator.name} className="w-8 h-8 rounded-full object-cover"/>
 
                         <div className="flex-1">
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-medium text-gray-800">
-                                {reply.commentCreator?.name}
-                              </p>
-
-                              <p className="text-xs text-gray-400">
-                                {reply.createdAt
-                                  ? new Date(reply.createdAt).toLocaleString(
-                                      "en-EG"
-                                    )
-                                  : "Just now"}
-                              </p>
-                            </div>
-                          </div>
-
-                          <p className="mt-2 text-sm leading-relaxed text-gray-700 break-words">
+                          <p className="text-sm text-white">
+                            <span className="font-semibold mr-2">
+                              {reply.commentCreator.name}
+                            </span>
                             {reply.content}
                           </p>
+
+                          <p className="text-xs text-slate-400 mt-1">
+                            {new Date(reply.createdAt).toLocaleString("en-EG")}
+                          </p>
                         </div>
+
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-xs text-gray-400">No replies yet.</p>
+                  <p className="text-xs text-slate-400">
+                    No replies yet
+                  </p>
                 )}
               </div>
             )}
           </div>
+
+          {/* Like Button */}
+          <button
+            onClick={() => handleLike(comment._id)}
+            className="text-slate-400 hover:text-red-400 transition"
+          >
+            <i className="fa-regular fa-heart"></i>
+          </button>
         </div>
       ))}
     </div>
