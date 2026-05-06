@@ -111,15 +111,15 @@ export default function ReelsPro() {
 
   const videoRefs = useRef([]);
   const observerRef = useRef(null);
-  const pageRef = useRef(1);
+  const pageRef = useRef(1); 
 
+  
   /* 🔊 load saved mute state */
   useEffect(() => {
     const saved = localStorage.getItem("reels-muted");
     if (saved !== null) setIsMuted(saved === "true");
   }, []);
 
-  /* 🔊 apply sound only to active video */
   useEffect(() => {
     videoRefs.current.forEach((video, i) => {
       if (!video) return;
@@ -274,8 +274,6 @@ export default function ReelsPro() {
                 <p className="font-semibold">@{v.user.name}</p>
                 <p className="text-xs opacity-70">{v.duration}s</p>
               </div>
-
-             
             </div>
           );
         })}

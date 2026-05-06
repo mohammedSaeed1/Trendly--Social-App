@@ -79,9 +79,9 @@ export default function CreatePost({ user }: { user: UserProfilee }) {
         </header>
 
         <footer className="flex items-center justify-between mt-4 pt-3 border-t border-white/10">
-          <label className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition cursor-pointer">
+          <label onClick={handleOpenModal} className="flex items-center gap-2 text-slate-300 hover:text-indigo-400 transition cursor-pointer">
             <i className="fa-regular fa-image text-lg"></i>
-            <span onClick={handleOpenModal} className="text-sm font-medium">Photo</span>
+            <span className="text-sm font-medium">Photo</span>
           </label>
 
           <Button
