@@ -4,6 +4,7 @@ import { useContext} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserContext } from "@/app/Context/UserContext";
+import Image from "next/image";
 
 export default function Sidebar() {
   const path = usePathname();
@@ -22,9 +23,10 @@ export default function Sidebar() {
 
         {/* Logo */}
         <h1 className="text-2xl font-bold text-white mb-10">
-          <span className="text-indigo-400">Trendly</span>
+=          <Image src="/trendly-logo-dark.svg" width={200} height={200} alt="Trendly socail media app logo"/>
         </h1>
 
+        <h2 className= "text-xl text-gray-200 py-3">Welcome , <span className="text-[#4F39F6]">{loggedUser?.name}</span> </h2>
         {/* Navigation */}
         <nav className="flex flex-col gap-2">
 

@@ -1,0 +1,23 @@
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Icon background pill -->
+  <rect x="24" y="24" width="72" height="72" rx="18" fill="#6366F1"/>
+
+  <!-- Trend line -->
+  <polyline points="36,78 51,58 65,66 88,38" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Peak dot -->
+  <circle cx="88" cy="38" r="4.5" fill="white"/>
+
+  <!-- Spark lines -->
+  <line x1="88" y1="29" x2="88" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="94" y1="32" x2="98" y2="28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="97" y1="38" x2="102" y2="38" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="114" y="72" font-family="Georgia, serif" font-size="52" font-weight="700" letter-spacing="-2" fill="white">Trend</text>
+  <text x="294" y="72" font-family="Georgia, serif" font-size="52" font-weight="700" letter-spacing="-2" fill="#818CF8">ly</text>
+
+  <!-- Tagline -->
+  <text x="114" y="95" font-family="Georgia, serif" font-size="13" letter-spacing="3" fill="#6B7280">CONNECT · SHARE · GROW</text>
+</svg>
