@@ -3,7 +3,7 @@ import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
 import { getFollowSuggestions, getMyProfile } from "./services/user.service";
 import SuggestedUsers from "./(components)/SuggestedUsers/SuggestedUsers";
-import Link from "next/link";
+
 
 export default async function Home() {
   const loggedUser = await getMyProfile();
@@ -12,49 +12,30 @@ export default async function Home() {
  
 
   return (
-    <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8">
-      
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <>
+    <section className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8 lg:pl-72">
 
-        {/* Left Sidebar */}
-        <aside className="hidden lg:block lg:col-span-3">
-          <div className="sticky top-6 space-y-4">
-            
-            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 shadow-xl">
-              <h2 className="text-white font-semibold text-lg">
-                Welcome 👋
-              </h2>
-              <p className="text-slate-400 text-sm">
-                {loggedUser?.name}
-              </p>
-              <Link href={`/profile/${loggedUser._id}`}>Profile</Link>
-            </div>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-          </div>
-        </aside>
+          {/* Main Feed */}
+          <main className="lg:col-span-8 space-y-6">
 
-        {/* Main Feed */}
-        <main className="lg:col-span-6 space-y-6">
+            <CreatePost user={loggedUser} />
 
-          {/* Create Post */}
-          <CreatePost user={loggedUser} />
-
-          {/* Posts */}
-          <div className="space-y-6">
             {posts?.map((post) => (
               <PostCard key={post._id} post={post} />
             ))}
-          </div>
-        </main>
 
-        {/* Right Sidebar */}
-        <aside className="lg:col-span-3">
-          <div className="sticky top-6">
+          </main>
+
+          {/* Right Side */}
+          <aside className="hidden lg:block lg:col-span-4">
             <SuggestedUsers suggestions={followSuggestions} />
-          </div>
-        </aside>
+          </aside>
 
-      </div>
-    </section>
+        </div>
+      </section>    
+    </>
+
   );
 }

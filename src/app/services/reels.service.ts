@@ -9,6 +9,5 @@ export async function getReels() {
   );
 
   const data = await res.json();
-//   console.log("Data from videos api",data);
   return data.videos;
 }
