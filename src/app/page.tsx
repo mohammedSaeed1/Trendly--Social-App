@@ -9,6 +9,7 @@ export default async function Home() {
   const loggedUser = await getMyProfile();
   const posts = await getAllPosts();
   const followSuggestions = await getFollowSuggestions();
+ 
 
   return (
     <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8">
