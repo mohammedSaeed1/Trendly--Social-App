@@ -4,83 +4,52 @@ import { getToken } from "@/app/lib/auth";
 import { revalidateTag } from "next/cache";
 
 export async function addLikeAndUnLike(postId: string) {
-    try {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/like`, {
             method: "PUT",
             headers: {
                 Token: await getToken() || ""
-            },
-            next: {
-                tags: ["posts"]
             }
         })
         if (res.ok) {
-            revalidateTag("posts");
+            revalidateTag(`getSinglePost${postId}`);
             return true;
         }
         else return false;
     }
-    catch (error) {
-        console.log("From error", error);
-    }
-}
+
 export async function addBookmarkAndUnBookmark(postId: string) {
-    try {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/bookmark`, {
             method: "PUT",
             headers: {
                 Token: await getToken() || ""
-            },
-            next: {
-                tags: ["posts"]
             }
         })
         if (res.ok) {
-            revalidateTag("posts");
+            revalidateTag(`getSinglePost${postId}`);
             return true;
         }
         else return false;
     }
-    catch (error) {
-        console.log("From error", error);
-    }
-}
-
 export async function sharePost(postId: string , bodyContent? : string) {
-    try {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/share`, {
             method: "POST",
             body: bodyContent ? JSON.stringify({body : bodyContent}) : undefined,
             headers: {
                 Token: await getToken() || "",
                 "Content-type": "application/json"
-            },
-            next: {
-                tags: ["posts"]
             }
         })
         if (res.ok) {
            revalidateTag("posts");
             return true
         }
-        else return false;
-        
+        else return false;   
     }
-    catch (error) {
-        console.log("From error", error);
-    }
-}
-
-
 export async function deletePost(postId: string) {
-    try {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "DELETE",
             headers: {
                 Token: await getToken() || "",
-            },
-            next: {
-                tags: ["posts"]
             }
         })
         if (res.ok) {
@@ -90,22 +59,12 @@ export async function deletePost(postId: string) {
         else return false;
         
     }
-    catch (error) {
-        console.log("From error", error);
-    }
-}
-
-
 export async function updatePost(postId: string , values : FormData) {
-    try {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "PUT",
             body: values,
             headers: {
                 Token: await getToken() || "",
-            },
-            next: {
-                tags: ["posts"]
             }
         })
         if (res.ok) {
@@ -113,10 +72,6 @@ export async function updatePost(postId: string , values : FormData) {
             return true;
         }
         else return false;
-    }
-    catch (error) {
-        console.log("From error", error);
-    }
 }
 
 export async function createComment(postId : string , values : FormData){
@@ -125,20 +80,14 @@ export async function createComment(postId : string , values : FormData){
         headers: {
             "Token": await getToken() || ""
         },
-        body: values,
-        next:{
-            tags : [`singlePost${postId}`]
-        }
+        body: values
     });
     if(res.ok){
         const data = await res.json();
-        console.log("From create comment action", data);
-        revalidateTag(`singlePost${postId}`);
+        revalidateTag(`getPostComments${postId}`);
         return data;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function getPostComments(postId : string){
@@ -153,12 +102,9 @@ export async function getPostComments(postId : string){
     });
     if(res.ok){
         const data = await res.json();
-        console.log("From comments action", data);
         return data.data.comments;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function deleteComment(postId : string , commentId : string){
@@ -172,9 +118,7 @@ export async function deleteComment(postId : string , commentId : string){
         revalidateTag(`getPostComments${postId}`);
         return true;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function updateComment(postId : string , commentId : string , updatedContent:FormData){
@@ -189,9 +133,7 @@ export async function updateComment(postId : string , commentId : string , updat
         revalidateTag(`getPostComments${postId}`);
         return true;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function addLikeAndUnlikeComment(postId : string , commentId : string){
@@ -205,9 +147,7 @@ export async function addLikeAndUnlikeComment(postId : string , commentId : stri
         revalidateTag(`getPostComments${postId}`);
         return true;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function createReply(postId : string , commentId : string , content:FormData){
@@ -219,12 +159,10 @@ export async function createReply(postId : string , commentId : string , content
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`);
+        revalidateTag(`getCommentReplies${commentId}`);
         return true;
     }
-    else{
-        return false;
-    }
+    else return false;
 }
 
 export async function getCommentReplies(postId : string , commentId : string){
@@ -233,14 +171,13 @@ export async function getCommentReplies(postId : string , commentId : string){
         headers: {
             "Token": await getToken() || ""
         },
+        next: {
+            tags: [`getCommentReplies${commentId}`]
+        }
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`);
         const data = await res.json();
-        console.log("adadadadada",data);
         return data.data.replies;        
     }
-    else{
-        return false;
-    }
+    else return false;
 }

@@ -5,6 +5,7 @@ import {addLikeAndUnlikeComment,createReply,deleteComment,getCommentReplies,upda
 import { toast } from "@heroui/react";
 import { useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
+import { UserProfile } from "@/app/types/user.types";
 
 export default function Comments({comments,post,loggedUserId}: {comments: Comment[],post: Post , loggedUserId : string}) {
   const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(null);

@@ -3,8 +3,9 @@ import { useRef } from "react";
 import {toast } from "@heroui/react";
 import { createComment } from "../PostCard/PostCard.actions";
 import { Post } from "@/app/types/post.types";
+import { UserProfile } from "@/app/types/user.types";
 
-export default function SendComment({ post }: { post: Post }) {
+export default function SendComment({ post , loggedUser }: { post: Post , loggedUser : UserProfile }) {
   const commentContent = useRef<HTMLInputElement>(null);
 
   async function handleSendComment() {
@@ -28,8 +29,8 @@ export default function SendComment({ post }: { post: Post }) {
     <div className="flex items-center gap-3 border border-white/10 bg-white/5 rounded-xl px-4 py-3">
 
       <img
-        src={post.user.photo}
-        alt={post.user.name}
+        src={loggedUser.photo}
+        alt={loggedUser.name}
         className="rounded-full w-10 h-10 object-cover"
       />
 
@@ -41,7 +42,7 @@ export default function SendComment({ post }: { post: Post }) {
 
       <button
         onClick={handleSendComment}
-        className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm px-4 py-1.5 rounded-lg transition"
+        className="bg-indigo-500 hover:bg-indigo-600 cursor-pointer text-white text-sm px-4 py-1.5 rounded-lg transition"
       >
         Post
       </button>

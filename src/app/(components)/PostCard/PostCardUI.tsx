@@ -7,6 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 import PostActionsMenu from "./PostActionsMenu";
 import { Post } from "@/app/types/post.types";
+import { formatEgyptDate } from "@/app/utlitis/Date";
 
 export default function PostCardUI({post , userId}:{post : Post , userId : string }) {
   return (
@@ -33,7 +34,7 @@ export default function PostCardUI({post , userId}:{post : Post , userId : strin
             </h2>
             </Link>
             <p className="text-slate-400 text-xs">
-              {(post.createdAt)}
+              {formatEgyptDate(post.createdAt)}
             </p>
           </div>
         </div>

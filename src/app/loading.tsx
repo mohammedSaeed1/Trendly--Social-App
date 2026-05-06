@@ -1,5 +1,5 @@
 export default function loading() {
   return (
-   <h1 className="text-white text-4xl">Loading...</h1>
-)
+<i className="fa-solid fa-spinner fa-spin text-indigo-500"></i>
+  )
 }

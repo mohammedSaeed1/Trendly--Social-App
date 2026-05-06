@@ -25,7 +25,7 @@ export default async function SinglePost({ params }: { params: Promise<{ id: str
 
         {/* Comments */}
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-xl p-4">
-          <CommentCard post={post} comments={comments} loggedUserId={loggedUser._id} />
+          <CommentCard post={post} comments={comments} loggedUser={loggedUser} />
         </div>
 
       </div>
