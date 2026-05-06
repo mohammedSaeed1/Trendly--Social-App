@@ -1,90 +1,19 @@
 "use client";
 
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext} from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import NotificationPanel from "../Notifications/Notifications";
-import {
-  getUnreadCount,
-  getNotifications,
-  markNotificationAsRead,
-  markAllAsRead,
-} from "../Notifications/Notifications.actions";
 import { UserContext } from "@/app/Context/UserContext";
 
 export default function Sidebar() {
   const path = usePathname();
   const loggedUser = useContext(UserContext);
 
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [notifications, setNotifications] = useState([]);
-
-  const panelRef = useRef<HTMLDivElement>(null);
-  const bellRef = useRef<HTMLButtonElement>(null);
-
   const links = [
     { label: "Home", href: "/", icon: "fa-house" },
     { label: "Reels", href: "/reels", icon: "fa-play" },
     { label: "Profile", href: `/profile/${loggedUser?._id}`, icon: "fa-user" },
   ];
-
-  // ── Fetch unread count ──
-  useEffect(() => {
-    fetchUnreadCount();
-  }, []);
-
-  async function fetchUnreadCount() {
-    const count = await getUnreadCount();
-    setUnreadCount(count);
-  }
-
-  // ── Close notifications panel on outside click ──
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        panelRef.current &&
-        !panelRef.current.contains(e.target as Node) &&
-        bellRef.current &&
-        !bellRef.current.contains(e.target as Node)
-      ) {
-        setIsPanelOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  async function fetchNotifications() {
-    const data = await getNotifications();
-    setNotifications(data);
-  }
-
-  function handleBellClick() {
-    const opening = !isPanelOpen;
-    setIsPanelOpen(opening);
-
-    if (opening) fetchNotifications();
-  }
-
-  function handleMarkAsRead(id: string) {
-    setNotifications((prev: any[]) =>
-      prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
-    );
-
-    setUnreadCount((prev) => Math.max(0, prev - 1));
-    markNotificationAsRead(id);
-  }
-
-  function handleMarkAllAsRead() {
-    setNotifications((prev: any[]) =>
-      prev.map((n) => ({ ...n, isRead: true }))
-    );
-    setUnreadCount(0);
-    markAllAsRead();
-  }
 
   return (
     <>
@@ -114,22 +43,6 @@ export default function Sidebar() {
             </Link>
           ))}
 
-          {/* Notifications */}
-          <button
-            ref={bellRef}
-            onClick={handleBellClick}
-            className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-400 hover:bg-white/10 hover:text-white transition relative"
-          >
-            <i className="fa-regular fa-bell"></i>
-            <span>Notifications</span>
-
-            {unreadCount > 0 && (
-              <span className="absolute right-4 flex h-5 min-w-5 items-center justify-center rounded-full bg-indigo-500 px-1 text-[10px] font-bold text-white">
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
-            )}
-          </button>
-
         </nav>
 
         {/* Bottom Auth */}
@@ -149,23 +62,6 @@ export default function Sidebar() {
           </Link>
         </div>
       </aside>
-
-      {/* ───────── NOTIFICATIONS PANEL ───────── */}
-      {isPanelOpen && (
-        <div
-          ref={panelRef}
-          className="fixed left-72 top-20 z-50 w-[350px]"
-        >
-          <div className="rounded-2xl border border-white/10 bg-slate-950/90 backdrop-blur-xl shadow-2xl">
-            <NotificationPanel
-              notifications={notifications}
-              unreadCount={unreadCount}
-              onMarkAsRead={handleMarkAsRead}
-              onMarkAllAsRead={handleMarkAllAsRead}
-            />
-          </div>
-        </div>
-      )}
     </>
   );
 }
