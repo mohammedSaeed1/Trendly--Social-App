@@ -32,7 +32,9 @@ export async function getFollowSuggestions(){
         headers:{
             Token: await getToken() || ""
         },
+        cache: "force-cache",
         next:{
+            revalidate: 60 * 60 * 24,
             tags: ["getFollowSuggestions"]
         }
     })

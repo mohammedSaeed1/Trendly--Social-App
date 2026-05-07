@@ -1,5 +1,12 @@
+"use client"
+import { useState } from "react";
+import TrendlyLoader from "./(components)/TrendlyLoader/TrendlyLoader";
+
 export default function loading() {
+  const [loaded, setLoaded] = useState(false);
   return (
-<i className="fa-solid fa-spinner fa-spin text-indigo-500"></i>
+    <>
+    {!loaded && <TrendlyLoader onFinish={() => setLoaded(true)} />}
+    </>
   )
 }

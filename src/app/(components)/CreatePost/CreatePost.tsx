@@ -1,13 +1,15 @@
 "use client";
 import { Avatar, Input, Modal, TextArea, toast, Button } from "@heroui/react";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { createPost } from "./CreatePost.actions";
-import { UserProfilee } from "@/app/types/user.types";
+import { UserContext } from "@/app/Context/UserContext";
 
-export default function CreatePost({ user }: { user: UserProfilee }) {
+export default function CreatePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const user = useContext(UserContext);
 
   const postContent = useRef<HTMLTextAreaElement | null>(null);
   const postImage = useRef<HTMLInputElement | null>(null);
@@ -64,16 +66,16 @@ export default function CreatePost({ user }: { user: UserProfilee }) {
         <header className="flex items-center gap-3">
           <Avatar className="shrink-0">
             <Avatar.Image
-              alt={user.name}
-              src={user.photo}
+              alt={user?.name}
+              src={user?.photo}
             />
-            <Avatar.Fallback>{user.name.slice(0, 1).toUpperCase()}</Avatar.Fallback>
+            <Avatar.Fallback>{user?.name.slice(0, 1).toUpperCase()}</Avatar.Fallback>
           </Avatar>
 
           <Input
             onClick={handleOpenModal}
             aria-label="Post Content"
-            placeholder={`What's on your mind , ${user.name} ?`}
+            placeholder={`What's on your mind , ${user?.name} ?`}
             readOnly
             className="cursor-pointer w-full bg-white/5 border border-white/10 hover:border-indigo-400 transition text-white placeholder:text-slate-400"/>
         </header>
@@ -109,10 +111,10 @@ export default function CreatePost({ user }: { user: UserProfilee }) {
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <Avatar.Image
-                      alt={user.name}
-                      src={user.photo}
+                      alt={user?.name}
+                      src={user?.photo}
                     />
-                    <Avatar.Fallback>{user.name.slice(0,1).toUpperCase()}</Avatar.Fallback>
+                    <Avatar.Fallback>{user?.name.slice(0,1).toUpperCase()}</Avatar.Fallback>
                   </Avatar>
 
                   <div>

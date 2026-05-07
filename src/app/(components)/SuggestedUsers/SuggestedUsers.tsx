@@ -43,7 +43,7 @@ export default function SuggestedUsers({suggestions}: {suggestions: SuggestedUse
 
       {/* Users */}
       <div className="space-y-4">
-        {suggestions.map((user) => (
+        {suggestions?.map((user) => (
           <div
             key={user._id}
             className="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition"

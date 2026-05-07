@@ -7,7 +7,9 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
      headers:{
       Token : await getToken() || ""
      },
+     cache: "force-cache",
      next: {
+      revalidate: 30,
       tags: ["posts"]
      }
    })

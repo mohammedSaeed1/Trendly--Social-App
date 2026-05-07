@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toast } from "@heroui/react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Sidebar from "./(components)/SideBar/SideBar";
-import MobileBottomBar from "./(components)/MobileBottomBar/MobileBottomBar";
 import UserContextProvider from "./Context/UserContext";
 import { getMyProfile } from "./services/user.service";
 
@@ -33,7 +32,6 @@ export default async function RootLayout({children}: Readonly<{children: React.R
      <UserContextProvider loggedUser = {user}>
        <Sidebar />
         {children}
-      <MobileBottomBar />
      </UserContextProvider>
       <Toast.Provider placement="top"/>
         </body>
