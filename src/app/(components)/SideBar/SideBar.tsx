@@ -122,12 +122,12 @@ export default function Sidebar() {
               >
                 <i className="fa-solid fa-right-from-bracket text-lg"></i>
 
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium cursor-pointer">
                   Logout
                 </span>
               </button>
             ) : (
-              <div className="hidden flex-col gap-2 lg:flex">
+              <div className="hidden flex-col gap-2 lg:flex cursor-pointer">
                 <Link
                   href="/login"
                   className="rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-white/5 hover:text-white"

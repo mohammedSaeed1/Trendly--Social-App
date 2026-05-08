@@ -49,7 +49,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
       <body className={`${poppins.className} flex flex-col min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900`}>
      <UserContextProvider loggedUser = {user} userToken ={userToken}>
        <Sidebar />
-       <Logo/>
+       <Logo/>      
         {children}
      </UserContextProvider>
       <Toast.Provider placement="top"/>
