@@ -12,6 +12,7 @@ export async function followAndUnfollowUser(userId : string){
     if(res.ok){
         const data = await res.json();
         revalidateTag(`getUserProfile${userId}`);
+        // revalidateTag()
         return data.data.following;
     }
 }
