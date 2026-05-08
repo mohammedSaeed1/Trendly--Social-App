@@ -123,7 +123,7 @@ export default function Sidebar() {
               >
                 <i className="fa-solid fa-right-from-bracket text-lg"></i>
 
-                <span className="text-sm font-medium cursor-pointer">
+                <span className="text-sm font-medium cursor-pointer text-red-400">
                   Logout
                 </span>
               </button>

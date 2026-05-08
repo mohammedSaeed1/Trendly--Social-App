@@ -53,17 +53,17 @@ export default function PostCardUI({post , userId}:{post : Post , userId : strin
           </p>
         )}
 
-        {post.image && (
-          <div className="rounded-xl overflow-hidden border border-white/10">
-            <Image
-              src={post.image}
-              alt="post image"
-              width={600}
-              height={400}
-              className="w-full h-auto object-cover"
-            />
-          </div>
-        )}
+       {post.image && (
+  <div className="relative w-full overflow-hidden rounded-xl border border-white/10">
+    <Image
+      src={post.image}
+      alt="Post image"
+      width={1200}
+      height={800}
+      className="h-auto max-h-150 w-full object-cover"
+    />
+  </div>
+)}
       </main>
 
       {/* Footer */}

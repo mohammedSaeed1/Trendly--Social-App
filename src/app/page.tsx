@@ -1,6 +1,7 @@
 import { getAllPosts } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
+import TrendingHashtags from "./(components)/TrendingHashtags/TrendingHashtags";
 
 
 
@@ -26,7 +27,7 @@ export default async function Home() {
 
           {/* Right Side */}
           <aside className="hidden lg:block lg:col-span-4">
-
+          <TrendingHashtags/>
           </aside>
 
         </div>
