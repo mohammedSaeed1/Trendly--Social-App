@@ -201,7 +201,7 @@ export default function ReelsPro() {
   };
 
   return (
-    <div className="flex min-h-screen bg-zinc-950 pl-0 sm:pl-[80px] items-center justify-center">
+    <div className="flex min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 pl-0 sm:pl-[80px] items-center justify-center">
       <div
         className="
           relative

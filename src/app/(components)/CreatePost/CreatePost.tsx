@@ -4,12 +4,13 @@ import Image from "next/image";
 import { useState, useRef, useContext } from "react";
 import { createPost } from "./CreatePost.actions";
 import { UserContext } from "@/app/Context/UserContext";
+import Link from "next/link";
 
 export default function CreatePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const user = useContext(UserContext);
+  const {loggedUser} = useContext(UserContext);
 
   const postContent = useRef<HTMLTextAreaElement | null>(null);
   const postImage = useRef<HTMLInputElement | null>(null);
@@ -62,20 +63,19 @@ export default function CreatePost() {
     <>
       {/* Main Create Box */}
       <div className="w-full rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl p-4">
-
         <header className="flex items-center gap-3">
           <Avatar className="shrink-0">
             <Avatar.Image
-              alt={user?.name}
-              src={user?.photo}
+              alt={loggedUser?.name}
+              src={loggedUser?.photo}
             />
-            <Avatar.Fallback>{user?.name.slice(0, 1).toUpperCase()}</Avatar.Fallback>
+            <Avatar.Fallback>{loggedUser?.name.slice(0, 1).toUpperCase()}</Avatar.Fallback>
           </Avatar>
 
           <Input
             onClick={handleOpenModal}
             aria-label="Post Content"
-            placeholder={`What's on your mind , ${user?.name} ?`}
+            placeholder={`What's on your mind , ${loggedUser?.name} ?`}
             readOnly
             className="cursor-pointer w-full bg-white/5 border border-white/10 hover:border-indigo-400 transition text-white placeholder:text-slate-400"/>
         </header>
@@ -111,10 +111,10 @@ export default function CreatePost() {
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <Avatar.Image
-                      alt={user?.name}
-                      src={user?.photo}
+                      alt={loggedUser?.name}
+                      src={loggedUser?.photo}
                     />
-                    <Avatar.Fallback>{user?.name.slice(0,1).toUpperCase()}</Avatar.Fallback>
+                    <Avatar.Fallback>{loggedUser?.name.slice(0,1).toUpperCase()}</Avatar.Fallback>
                   </Avatar>
 
                   <div>

@@ -6,6 +6,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Sidebar from "./(components)/SideBar/SideBar";
 import UserContextProvider from "./Context/UserContext";
 import { getMyProfile } from "./services/user.service";
+import { cookies } from "next/headers";
+import { UserProfile } from "./types/user.types";
+import Logo from "./(components)/Logo/Logo";
+
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -24,13 +28,17 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>){
   
-  const user = await getMyProfile();
+  const user : UserProfile = await getMyProfile();
+   
+  const userToken : string  = (await cookies()).get("usertoken")?.value;
+
   return (
     <>
     <html lang="en" className={`h-full antialiased `}>
-      <body className="flex flex-col min-h-screen">
-     <UserContextProvider loggedUser = {user}>
+      <body className="flex flex-col min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900">
+     <UserContextProvider loggedUser = {user} userToken ={userToken}>
        <Sidebar />
+       <Logo/>
         {children}
      </UserContextProvider>
       <Toast.Provider placement="top"/>

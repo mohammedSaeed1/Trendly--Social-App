@@ -26,7 +26,7 @@ export default function ProfileUI({
     userProfile?.cover.trim() !== "";
 
   return (
-    <section className="min-h-screen bg-slate-950 px-4 py-6 pb-24 lg:ml-[270px]">
+    <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-6 pb-24 lg:ml-67.5">
       <div className="mx-auto max-w-5xl">
 
         {/* Cover */}
@@ -65,17 +65,17 @@ export default function ProfileUI({
               <div className="flex flex-wrap items-center gap-3">
 
                 <h1 className="text-3xl font-bold text-white">
-                  {userProfile.name}
+                  {userProfile?.name}
                 </h1>
 
                 <span className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300 capitalize">
-                  {userProfile.gender}
+                  {userProfile?.gender}
                 </span>
               </div>
 
               {/* Username */}
               <p className="mt-2 text-slate-400">
-                @{userProfile.username}
+                @{userProfile?.username}
               </p>
 
               {/* Stats */}
@@ -84,15 +84,15 @@ export default function ProfileUI({
                 {[
                   {
                     label: "Followers",
-                    value: userProfile.followersCount,
+                    value: userProfile?.followersCount,
                   },
                   {
                     label: "Following",
-                    value: userProfile.followingCount,
+                    value: userProfile?.followingCount,
                   },
                   {
                     label: "Bookmarks",
-                    value: userProfile.bookmarksCount,
+                    value: userProfile?.bookmarksCount,
                   },
                 ].map(({ label, value }) => (
                   <div
@@ -116,7 +116,7 @@ export default function ProfileUI({
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-envelope text-indigo-400"></i>
 
-                  <span>{userProfile.email}</span>
+                  <span>{userProfile?.email}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -131,14 +131,14 @@ export default function ProfileUI({
                   <i className="fa-solid fa-calendar text-indigo-400"></i>
 
                   <span>
-                    Joined {joinedDate(userProfile.createdAt)}
+                    Joined {joinedDate(userProfile?.createdAt)}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Right */}
-            {loggedInUserId === userProfile._id && (
+            {loggedInUserId === userProfile?._id && (
               <div className="w-full lg:w-[320px]">
 
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">
