@@ -86,7 +86,7 @@ export default function ProfileUI({
                 {/* Owner Actions */}
                 {loggedInUserId === userProfile?.user._id ? (
                   <>
-                  <Link href={`/changePassword`}>
+                  <Link href={`/ChangePassword`}>
                     <button className="flex items-center gap-2 cursor-pointer rounded-2xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-400">
                       <i className="fa-solid fa-key"></i>
                       Change Password
