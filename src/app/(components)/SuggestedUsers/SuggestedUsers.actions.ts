@@ -10,7 +10,8 @@ export async function followAndUnfollowUser(userId : string){
         }
     })
     if(res.ok){
-        revalidateTag("getFollowSuggestions");
-        return true;
+        const data = await res.json();
+        revalidateTag(`getUserProfile${userId}`);
+        return data.data.following;
     }
 }

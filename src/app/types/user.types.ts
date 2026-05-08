@@ -1,4 +1,4 @@
-export interface UserProfile {
+export interface User{
   _id: string;
   name: string;
   username: string;
@@ -11,6 +11,14 @@ export interface UserProfile {
   followingCount: number;
   bookmarksCount: number;
   createdAt: string;
+}
+
+export interface LoggedUserProfile {
+  user : User
+}
+export interface UserProfile{
+  isFollowing: boolean,
+  user: User
 }
 
 export interface SuggestedUser {

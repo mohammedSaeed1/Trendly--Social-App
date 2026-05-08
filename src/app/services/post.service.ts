@@ -14,7 +14,7 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
      }
    })
    if(res.ok){
-     const data = await res.json();
+     const data = await res.json();     
      return data?.data?.posts;
    }
    }

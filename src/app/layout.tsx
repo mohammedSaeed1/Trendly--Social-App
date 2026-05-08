@@ -6,7 +6,7 @@ import Sidebar from "./(components)/SideBar/SideBar";
 import UserContextProvider from "./Context/UserContext";
 import { getMyProfile } from "./services/user.service";
 import { cookies } from "next/headers";
-import { UserProfile } from "./types/user.types";
+import { LoggedUserProfile} from "./types/user.types";
 import Logo from "./(components)/Logo/Logo";
 import {poppins} from "@/app/fonts";
 
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({children}: Readonly<{children: React.ReactNode}>){
   
-  const user : UserProfile = await getMyProfile();
+  const user : LoggedUserProfile = await getMyProfile();
    
   const userToken : string  = (await cookies()).get("usertoken")?.value;
 

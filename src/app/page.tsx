@@ -1,13 +1,13 @@
 import { getAllPosts } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
-import { getFollowSuggestions} from "./services/user.service";
-import SuggestedUsers from "./(components)/SuggestedUsers/SuggestedUsers";
+// import { getFollowSuggestions} from "./services/user.service";
+// import SuggestedUsers from "./(components)/SuggestedUsers/SuggestedUsers";
 
 
 export default async function Home() {
   const posts = await getAllPosts();
-  const followSuggestions = await getFollowSuggestions();
+  // const followSuggestions = await getFollowSuggestions();
  
   return (
     <>
@@ -28,7 +28,7 @@ export default async function Home() {
 
           {/* Right Side */}
           <aside className="hidden lg:block lg:col-span-4">
-            <SuggestedUsers suggestions={followSuggestions} />
+            {/* <SuggestedUsers suggestions={followSuggestions} /> */}
           </aside>
 
         </div>

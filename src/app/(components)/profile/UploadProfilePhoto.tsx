@@ -1,6 +1,6 @@
 "use client";
 
-import { UserProfile } from "@/app/types/user.types";
+import { LoggedUserProfile, UserProfile } from "@/app/types/user.types";
 import { Modal, toast } from "@heroui/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -10,7 +10,7 @@ export function UploadProfilePhoto({
   user,
   loggedInUserId,
 }: {
-  user: UserProfile;
+  user: UserProfile | LoggedUserProfile;
   loggedInUserId: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,14 +82,14 @@ export function UploadProfilePhoto({
       <div className="relative h-32 w-32 overflow-hidden rounded-full border-4 border-slate-950 shadow-2xl">
 
         <Image
-          src={imagePreview || user?.photo}
-          alt={user?.name}
+          src={imagePreview || user?.user.photo}
+          alt={user?.user.name}
           fill
           className="object-cover"
         />
 
         {/* Camera Button */}
-        {loggedInUserId === user?._id && (
+        {loggedInUserId === user?.user._id && (
           <button
             onClick={handleOpenModal}
             className="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 text-white shadow-lg transition hover:scale-105 hover:bg-indigo-600"
@@ -135,8 +135,8 @@ export function UploadProfilePhoto({
                   <div className="relative h-56 w-56 overflow-hidden rounded-full border-4 border-white/10 shadow-xl">
 
                     <Image
-                      src={imagePreview || user?.photo}
-                      alt={user.name}
+                      src={imagePreview || user?.user.photo}
+                      alt={user.user.name}
                       fill
                       className="object-cover"
                     />
@@ -145,11 +145,11 @@ export function UploadProfilePhoto({
                   {/* Name */}
                   <div className="mt-5 text-center">
                     <h4 className="text-xl font-semibold text-white">
-                      {user?.name}
+                      {user?.user.name}
                     </h4>
 
                     <p className="text-sm text-slate-400">
-                      @{user?.username}
+                      @{user?.user.username}
                     </p>
                   </div>
                 </div>

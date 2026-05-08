@@ -27,5 +27,6 @@ export const config = {
     "/notifications",
     "/login",
     "/register",
+    "/changePassword"
   ],
 };

@@ -7,12 +7,13 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { UserContext } from "@/app/Context/UserContext";
 import { getUnreadCount } from "../notifications/Notifications.actions";
+import { LoggedUserProfile } from "@/app/types/user.types";
 
 export default function Sidebar() {
   const path = usePathname();
   const router = useRouter();
 
-  const { loggedUser, userToken } = useContext(UserContext);
+  const { loggedUser, userToken } :{loggedUser : LoggedUserProfile , userToken : string} = useContext(UserContext);
 
   const [unreadCountNotifications, setUnreadCountNotifications] =
     useState<number>(0);
@@ -22,7 +23,7 @@ export default function Sidebar() {
     { label: "Reels", href: "/reels", icon: "fa-clapperboard" },
     {
       label: "Profile",
-      href: `/profile/${loggedUser?._id}`,
+      href: `/profile/${loggedUser?.user._id}`,
       icon: "fa-user",
     },
     {

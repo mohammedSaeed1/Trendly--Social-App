@@ -10,8 +10,8 @@ export async function getUserProfile(userId : string){
         }
     })
     if(res.ok){
-        const data = await res.json();
-        return data.data.user;
+        const data = await res.json();        
+        return data.data;
     }
 }
 
@@ -23,7 +23,7 @@ export async function getMyProfile(){
     })
     if(res.ok){
         const data = await res.json();
-        return data.data.user;
+        return data.data;
     }
 }
 
@@ -60,6 +60,7 @@ export async function getUserPosts(userId : string){
         return data.data.posts;
     }
 }
+
 
 
 

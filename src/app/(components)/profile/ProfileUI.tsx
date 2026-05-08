@@ -1,9 +1,11 @@
 import Image from "next/image";
-import { UserProfile } from "@/app/types/user.types";
+import { LoggedUserProfile, UserProfile } from "@/app/types/user.types";
 import { Post } from "@/app/types/post.types";
 import BookmarkPosts from "../Bookmark/BookmarkPosts";
 import PostCard from "../PostCard/PostCard";
 import { UploadProfilePhoto } from "./UploadProfilePhoto";
+import Link from "next/link";
+import FollowUnFollowBtn from "./FollowUnFollowBtn";
 
 function joinedDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -17,13 +19,13 @@ export default function ProfileUI({
   userPosts,
   loggedInUserId,
 }: {
-  userProfile: UserProfile;
+  userProfile: UserProfile | LoggedUserProfile;
   userPosts: Post[];
   loggedInUserId: string;
 }) {
   const hasCover =
-    userProfile?.cover &&
-    userProfile?.cover.trim() !== "";
+    userProfile?.user.cover &&
+    userProfile?.user.cover.trim() !== "";
 
   return (
     <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-6 pb-24 lg:ml-67.5">
@@ -34,7 +36,7 @@ export default function ProfileUI({
 
           {hasCover ? (
             <Image
-              src={userProfile.cover}
+              src={userProfile?.user?.cover}
               alt="cover"
               fill
               className="object-cover"
@@ -65,18 +67,40 @@ export default function ProfileUI({
               <div className="flex flex-wrap items-center gap-3">
 
                 <h1 className="text-3xl font-bold text-white">
-                  {userProfile?.name}
+                  {userProfile?.user.name}
                 </h1>
 
                 <span className="rounded-full border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300 capitalize">
-                  {userProfile?.gender}
+                  {userProfile?.user.gender}
                 </span>
               </div>
 
               {/* Username */}
               <p className="mt-2 text-slate-400">
-                @{userProfile?.username}
+                @{userProfile?.user.username}
               </p>
+
+              {/* Actions */}
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+
+                {/* Owner Actions */}
+                {loggedInUserId === userProfile?.user._id ? (
+                  <>
+                  <Link href={`/changePassword`}>
+                    <button className="flex items-center gap-2 cursor-pointer rounded-2xl bg-indigo-500 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-400">
+                      <i className="fa-solid fa-key"></i>
+                      Change Password
+                    </button>
+                  </Link>
+                  </>
+                ) : (
+                  <>
+                    {/* Follow State */}
+                   <FollowUnFollowBtn userProfile = {userProfile}/>
+                  </>
+                )}
+              </div>
+
 
               {/* Stats */}
               <div className="mt-6 grid grid-cols-3 gap-3">
@@ -84,15 +108,15 @@ export default function ProfileUI({
                 {[
                   {
                     label: "Followers",
-                    value: userProfile?.followersCount,
+                    value: userProfile?.user.followersCount,
                   },
                   {
                     label: "Following",
-                    value: userProfile?.followingCount,
+                    value: userProfile?.user.followingCount,
                   },
                   {
                     label: "Bookmarks",
-                    value: userProfile?.bookmarksCount,
+                    value: userProfile?.user.bookmarksCount,
                   },
                 ].map(({ label, value }) => (
                   <div
@@ -116,14 +140,14 @@ export default function ProfileUI({
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-envelope text-indigo-400"></i>
 
-                  <span>{userProfile?.email}</span>
+                  <span>{userProfile?.user.email}</span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <i className="fa-solid fa-cake-candles text-indigo-400"></i>
 
                   <span>
-                    {userProfile?.dateOfBirth?.slice(0, 10)}
+                    {userProfile?.user.dateOfBirth?.slice(0, 10)}
                   </span>
                 </div>
 
@@ -131,14 +155,14 @@ export default function ProfileUI({
                   <i className="fa-solid fa-calendar text-indigo-400"></i>
 
                   <span>
-                    Joined {joinedDate(userProfile?.createdAt)}
+                    Joined {joinedDate(userProfile?.user.createdAt)}
                   </span>
                 </div>
               </div>
             </div>
 
             {/* Right */}
-            {loggedInUserId === userProfile?._id && (
+            {loggedInUserId === userProfile?.user._id && (
               <div className="w-full lg:w-[320px]">
 
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-5 backdrop-blur-xl">

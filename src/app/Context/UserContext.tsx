@@ -1,15 +1,15 @@
 "use client"
 import { createContext} from "react";
-import { UserProfile } from "../types/user.types";
+import { LoggedUserProfile} from "../types/user.types";
 
 type UserContextValue = {
-  loggedUser: UserProfile
+  loggedUser: LoggedUserProfile
   userToken: string
 }
 
 export const UserContext = createContext<UserContextValue | null>(null);
 
-export default function UserContextProvider({ children , loggedUser , userToken}: { children: React.ReactNode , loggedUser : UserProfile , userToken : string }) {
+export default function UserContextProvider({ children , loggedUser , userToken}: { children: React.ReactNode , loggedUser : LoggedUserProfile , userToken : string }) {
   
   return <UserContext.Provider value={{loggedUser , userToken} }>
     {children}
