@@ -73,7 +73,7 @@ export async function updatePost(postId: string , values : FormData) {
             }
         })
         if (res.ok) {
-           revalidateTag(`getSinglePost${postId}`);
+           revalidateTag(`posts`);
             return true;
         }
         else return false;
