@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { UserContext } from "@/app/Context/UserContext";
 import { LoggedUserProfile } from "@/app/types/user.types";
-import { getUnreadCount } from "../notifications/Notifications.actions";
+import { getUnreadCount } from "@/app/(components)/notifications/Notifications.actions";
 
 export default function Sidebar() {
   const path = usePathname();
