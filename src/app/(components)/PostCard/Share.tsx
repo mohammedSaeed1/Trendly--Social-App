@@ -1,70 +1,121 @@
-"use client"
-
-import { toast } from "@heroui/react";
-import {sharePost} from "./PostCard.actions"
-import { Avatar,  Modal, TextArea} from "@heroui/react";
-import { useRef, useState } from "react";
+"use client";
+import { useState } from "react";
+import { toast, Avatar, Modal, TextArea } from "@heroui/react";
+import Image from "next/image";
+import { sharePost } from "./PostCard.actions";
 import { Post } from "@/app/types/post.types";
 
+export default function Share({ post }: { post: Post }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [content, setContent] = useState("");
+  const [isSharing, setIsSharing] = useState(false);
 
- export default function Share({post} : {post: Post}){
-
-      const [isOpen, setIsOpen] = useState(false);
-      const sharedContent = useRef();
-
-        function handleOpenModal() {
-        setIsOpen(true);
-    }
-  
-
-  async function handleShare(){
-    
-    const isSuccessfully = await sharePost(post._id , sharedContent.current?.value);
-    if(isSuccessfully) toast.success("post shared successfully");
-    else toast.danger("Post already shared!");
+  function handleOpenModal() {
+    setIsOpen(true);
   }
-  
+
+  async function handleShare() {
+    try {
+      setIsSharing(true);
+
+      const sharedPost= await sharePost(post._id, content.trim());
+
+      if (!sharedPost) {
+        toast.danger("Post already shared!");
+        return;
+      }
+      toast.success("Post shared successfully");
+      setContent("");
+      setIsOpen(false);
+    } catch (_) {
+      toast.danger("Failed to share post");
+    } finally {
+      setIsSharing(false);
+    }
+  }
+
   return (
     <>
-    <i onClick={handleOpenModal} className="fa-solid fa-share cursor-pointer ms-auto text-[#637188]"></i>
-      <Modal    
-                         isOpen={isOpen}
-                         onOpenChange={(open) => setIsOpen(open)}
-                    
-                     >
-                         <Modal.Backdrop variant="blur">
-                             <Modal.Container>
-                                 <Modal.Dialog className="sm:max-w-90 bg-[#1E2A47] border-none">
-                                     <Modal.CloseTrigger />
-                                     <Modal.Header>
-                                         <Avatar>
-                                             <Avatar.Image alt="John Doe" src="https://img.heroui.chat/image/avatar?w=400&h=400&u=3" />
-                                             <Avatar.Fallback>JD</Avatar.Fallback>
-                                         </Avatar>
-                                     </Modal.Header>
-                                     <Modal.Body>
-                                         <TextArea ref={sharedContent}  className=" w-full bg-[#3A4960] text-white placeholder:text-gray-100" placeholder="Add a comment to your share...">
-                                          </TextArea>
-                                           <TextArea className=" w-full bg-[#3A4960] text-white placeholder:text-gray-100">
-                                            {post.body}
-                                          </TextArea>
-                                
-                                     </Modal.Body>
-                                     <Modal.Footer className="ms-auto">
-                                         {/* Share Button */}
-                                         <button
-                                             onClick={() => {
-                                                handleShare();
-                                             }}
-                                             className="rounded-md bg-[#4651EA] hover:bg-[#4651EA] text-white font-semibold px-6 py-2 text-sm transition-colors cursor-pointer border-none"
-                                         >
-                                             Share
-                                         </button>
-                                     </Modal.Footer>
-                                 </Modal.Dialog>
-                             </Modal.Container>
-                         </Modal.Backdrop>
-                     </Modal>
+      <button
+        onClick={handleOpenModal}
+        className="flex h-8 w-8 items-center justify-center rounded-full text-[#637188] transition hover:bg-white/10 hover:text-white"
+      >
+        <i className="fa-solid fa-share" />
+      </button>
+
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
+        <Modal.Backdrop variant="blur">
+          <Modal.Container>
+            <Modal.Dialog className="border border-white/10 bg-slate-900 text-white sm:max-w-xl">
+              <Modal.CloseTrigger />
+
+              {/* Header */}
+              <Modal.Header className="border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <Avatar.Image
+                      src={post.user.photo}
+                      alt={post.user.name}
+                    />
+                    <Avatar.Fallback>U</Avatar.Fallback>
+                  </Avatar>
+
+                  <div>
+                    <h3 className="text-base font-semibold">Share Post</h3>
+                    <p className="text-xs text-slate-400">
+                      Add a comment to your share
+                    </p>
+                  </div>
+                </div>
+              </Modal.Header>
+
+              {/* Body */}
+              <Modal.Body className="space-y-4 py-5">
+                {/* Optional comment */}
+                <TextArea
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Say something about this post..."
+                  className="w-full resize-none"
+                  rows={3}
+                />
+
+                {/* Original post preview */}
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                  {post.body && (
+                    <p className="whitespace-pre-wrap text-sm text-slate-200">
+                      {post.body}
+                    </p>
+                  )}
+
+                  {post.image && (
+                    <div className="mt-3 overflow-hidden rounded-xl">
+                      <Image
+                        src={post.image}
+                        alt="Original post image"
+                        width={800}
+                        height={500}
+                        className="h-auto w-full object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
+              </Modal.Body>
+
+              {/* Footer */}
+              <Modal.Footer className="border-t border-white/10 pt-4">
+                <button
+                  onClick={handleShare}
+                  disabled={isSharing}
+                  className="ml-auto rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {isSharing ? "Sharing..." : "Share Post"}
+                </button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
+      </Modal>
     </>
-  )
+  );
 }

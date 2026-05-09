@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Notification } from "@/app/types/notification.types";
 import {markNotificationAsRead , markAllAsRead} from "./Notifications.actions";
-import Link from "next/link";
 
 function formatTime(date: string) {
   return new Date(date).toLocaleString("en-US", {
@@ -51,14 +50,14 @@ async function handleReadNotification(notificationId : string){
           onClick={handleReadAllNotifications}
           className="text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer"
         >
-          Mark all as read
+           {notifications.length > 0 &&  "Mark all as read" }  
         </button>
       </div>
 
       {/* List */}
       <div className="max-w-xl mx-auto space-y-3">
 
-        {notifications.map((notification) => 
+         { notifications.length > 0 ? notifications.map((notification) => 
            <div 
               key={notification._id}
               onClick={() => handleReadNotification(notification._id)}
@@ -108,7 +107,9 @@ async function handleReadNotification(notificationId : string){
               </div>
 
             </div> 
-          )}
+          ) : <p className=" text-white text-center pt-10">No notifications added yet !</p>}
+
+
       </div>
     </section>
   )

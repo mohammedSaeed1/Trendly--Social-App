@@ -3,9 +3,8 @@ import { Post } from "@/app/types/post.types";
 import Comments from "./Comments";
 import SendComment from "./SendComment";
 import { Comment } from "@/app/types/comment.types";
-import { UserProfile } from "@/app/types/user.types";
 
-export default function CommentCard({ comments , post , loggedUser}: { comments: Comment[] , post : Post , loggedUser : UserProfile }) {
+export default function CommentCard({ comments , post}: { comments: Comment[] , post : Post}) {
     return (
         <div className="space-y-6">
 
@@ -13,9 +12,9 @@ export default function CommentCard({ comments , post , loggedUser}: { comments:
         Comments
       </h3>
 
-      <SendComment post = {post} loggedUser = {loggedUser} />
+      <SendComment post = {post}/>
 
-      <Comments post={post} comments={comments} loggedUserId = {loggedUser._id} />
+      <Comments post={post} comments={comments}/>
 
     </div>
     )

@@ -1,11 +1,15 @@
 "use client"
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import {toast } from "@heroui/react";
 import { createComment } from "../PostCard/PostCard.actions";
 import { Post } from "@/app/types/post.types";
-import { UserProfile } from "@/app/types/user.types";
+import { UserContext } from "@/app/Context/UserContext";
+import { LoggedUserProfile } from "@/app/types/user.types";
 
-export default function SendComment({ post , loggedUser }: { post: Post , loggedUser : UserProfile }) {
+export default function SendComment({ post}: { post: Post}) {
+  
+      const {loggedUser} : {loggedUser : LoggedUserProfile} =  useContext(UserContext);
+
   const commentContent = useRef<HTMLInputElement>(null);
 
   async function handleSendComment() {
@@ -29,8 +33,8 @@ export default function SendComment({ post , loggedUser }: { post: Post , logged
     <div className="flex items-center gap-3 border border-white/10 bg-white/5 rounded-xl px-4 py-3">
 
       <img
-        src={loggedUser.photo}
-        alt={loggedUser.name}
+        src={loggedUser.user.photo}
+        alt={loggedUser.user.name}
         className="rounded-full w-10 h-10 object-cover"
       />
 

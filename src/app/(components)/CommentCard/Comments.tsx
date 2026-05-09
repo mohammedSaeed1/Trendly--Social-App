@@ -3,20 +3,21 @@
 import { Comment } from "@/app/types/comment.types";
 import {addLikeAndUnlikeComment,createReply,deleteComment,getCommentReplies,updateComment} from "../PostCard/PostCard.actions";
 import { toast } from "@heroui/react";
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
-import { UserProfile } from "@/app/types/user.types";
+import { UserContext } from "@/app/Context/UserContext";
+import { LoggedUserProfile } from "@/app/types/user.types";
 
-export default function Comments({comments,post,loggedUserId}: {comments: Comment[],post: Post , loggedUserId : string}) {
+export default function Comments({comments,post}: {comments: Comment[],post: Post}) {
+
+   const {loggedUser} : {loggedUser : LoggedUserProfile} = useContext(UserContext);
+
   const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(null);
   const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null);
   const [visibleRepliesCommentId, setVisibleRepliesCommentId] = useState<string | null>(null);
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
-
-
- 
 
   function handleInputForUpdate(commentId: string) {
     setActiveEditCommentId((prev) => (prev === commentId ? null : commentId));
@@ -140,7 +141,7 @@ export default function Comments({comments,post,loggedUserId}: {comments: Commen
                 Reply
               </button>
 
-              { loggedUserId === comment.commentCreator._id && (
+              { loggedUser.user._id === comment.commentCreator._id && (
                 <>
                   <button
                     onClick={() => handleInputForUpdate(comment._id)}

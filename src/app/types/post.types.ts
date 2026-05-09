@@ -11,7 +11,7 @@ export interface Post{
   isShare: boolean, 
   bookmarked: boolean,
   likes: string[],
-
+  sharedPost: Post | null
 }
 export interface User{
   _id : string,

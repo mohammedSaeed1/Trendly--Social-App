@@ -3,11 +3,12 @@ import { getToken } from "@/app/lib/auth";
 import { revalidateTag } from "next/cache";
 
 export async function uploadProfilePhoto(photo : FormData){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/upload-photo`,{
         method: "PUT",
         body: photo,
         headers:{
-            Token: await getToken() || ""
+            Token: token
         }
     })
     if(res.ok){
@@ -17,9 +18,10 @@ export async function uploadProfilePhoto(photo : FormData){
 }
 
 export async function getBookmarks(){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/bookmarks`,{
         headers:{
-            Token: await getToken() || ""
+            Token: token
         },
         next:{
             tags: ["getBookmarks"]

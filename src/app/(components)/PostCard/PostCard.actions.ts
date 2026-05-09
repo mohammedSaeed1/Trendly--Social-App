@@ -1,13 +1,13 @@
 "use server"
-
 import { getToken } from "@/app/lib/auth";
 import { revalidateTag } from "next/cache";
 
 export async function addLikeAndUnLike(postId: string) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/like`, {
             method: "PUT",
             headers: {
-                Token: await getToken() || ""
+                Token: token
             }
         })
         if (res.ok) {
@@ -18,10 +18,11 @@ export async function addLikeAndUnLike(postId: string) {
     }
 
 export async function addBookmarkAndUnBookmark(postId: string) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/bookmark`, {
             method: "PUT",
             headers: {
-                Token: await getToken() || ""
+                Token: token
             }
         })
         if (res.ok) {
@@ -31,25 +32,28 @@ export async function addBookmarkAndUnBookmark(postId: string) {
         else return false;
     }
 export async function sharePost(postId: string , bodyContent? : string) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/share`, {
             method: "POST",
             body: bodyContent ? JSON.stringify({body : bodyContent}) : undefined,
             headers: {
-                Token: await getToken() || "",
+                Token: token,
                 "Content-type": "application/json"
             }
         })
         if (res.ok) {
-           revalidateTag("posts");
-            return true
+            const data = await res.json();
+            revalidateTag("posts");
+            return data.data.post;
         }
         else return false;   
     }
 export async function deletePost(postId: string) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "DELETE",
             headers: {
-                Token: await getToken() || "",
+                Token: token,
             }
         })
         if (res.ok) {
@@ -60,25 +64,27 @@ export async function deletePost(postId: string) {
         
     }
 export async function updatePost(postId: string , values : FormData) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "PUT",
             body: values,
             headers: {
-                Token: await getToken() || "",
+                Token: token
             }
         })
         if (res.ok) {
-           revalidateTag("posts");
+           revalidateTag(`getSinglePost${postId}`);
             return true;
         }
         else return false;
 }
 
 export async function createComment(postId : string , values : FormData){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
         method: "POST",
         headers: {
-            "Token": await getToken() || ""
+            "Token": token
         },
         body: values
     });
@@ -91,10 +97,11 @@ export async function createComment(postId : string , values : FormData){
 }
 
 export async function getPostComments(postId : string){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
         method: "GET",
         headers: {
-            "Token": await getToken() || ""
+            "Token": token
         },
         next:{
             tags:[`getPostComments${postId}`]
@@ -108,10 +115,11 @@ export async function getPostComments(postId : string){
 }
 
 export async function deleteComment(postId : string , commentId : string){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}`, {
         method: "Delete",
         headers: {
-            "Token": await getToken() || ""
+            "Token": token
         },
     });
     if(res.ok){
@@ -122,11 +130,12 @@ export async function deleteComment(postId : string , commentId : string){
 }
 
 export async function updateComment(postId : string , commentId : string , updatedContent:FormData){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}`, {
         method: "PUT",
         body: updatedContent,
         headers: {
-            "Token": await getToken() || ""
+            "Token": token
         },
     });
     if(res.ok){
@@ -137,25 +146,26 @@ export async function updateComment(postId : string , commentId : string , updat
 }
 
 export async function addLikeAndUnlikeComment(postId : string , commentId : string){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/like`, {
         method: "PUT",
         headers: {
-            "Token": await getToken() || ""
+            "Token": token
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`);
         return true;
     }
     else return false;
 }
 
 export async function createReply(postId : string , commentId : string , content:FormData){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/replies`, {
         method: "POST",
         body: content,
         headers: {
-            "Token": await getToken() || ""
+            Token: token
         },
     });
     if(res.ok){
@@ -166,10 +176,11 @@ export async function createReply(postId : string , commentId : string , content
 }
 
 export async function getCommentReplies(postId : string , commentId : string){
+    const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/replies`, {
         method: "GET",
         headers: {
-            "Token": await getToken() || ""
+            Token: token
         },
         next: {
             tags: [`getCommentReplies${commentId}`]

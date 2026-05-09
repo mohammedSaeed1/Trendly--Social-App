@@ -2,10 +2,10 @@ import { getToken } from "../lib/auth";
 import { Post } from "../types/post.types";
 
 export async function getAllPosts() :Promise<Post[] | undefined>{
-  
+    const token = await getToken();
     const res = await fetch("https://route-posts.routemisr.com/posts",{
      headers:{
-      Token : await getToken() || ""
+      Token : token
      },
      cache: "force-cache",
      next: {
@@ -20,10 +20,11 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
    }
 
 export async function getSinglePost(postId: string) {
+    const token = await getToken();
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "GET",
             headers: {
-                Token: await getToken() || "",
+                Token: token
             },
             next: {
               tags: [`getSinglePost${postId}`]
