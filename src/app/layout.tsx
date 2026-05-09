@@ -12,7 +12,7 @@ import {poppins} from "@/app/fonts";
 
 
 export const metadata: Metadata = {
-  title: "Trendly Social app",
+  title: "Trendly Social App",
   description:
   "Trendly is a modern social media platform to share posts, explore reels, connect with friends, and discover trending content.",
   keywords: [
