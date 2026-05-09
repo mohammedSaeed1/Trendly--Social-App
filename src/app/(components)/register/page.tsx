@@ -2,10 +2,20 @@ import RegisterForm from "./RegisterForm";
 
 export default function Register() {
   return (
-    <section className="min-h-screen lg:ml-67.5 flex items-center justify-center px-4 bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900">
-      
-      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
-
+    <section
+      className="
+        min-h-screen
+        lg:ml-67.5
+        px-4
+        py-8
+        pb-24 lg:pb-8
+        bg-linear-to-br
+        from-slate-950
+        via-indigo-950
+        to-slate-900
+      "
+    >
+      <div className="w-full max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
         {/* Left Side - Text */}
         <div className="text-white space-y-4 text-center md:text-left">
           <h1 className="text-3xl sm:text-4xl font-bold leading-tight">
@@ -13,7 +23,8 @@ export default function Register() {
           </h1>
 
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
-            Connect with friends, share moments, and explore trends in a modern social experience built for creators.
+            Connect with friends, share moments, and explore trends in a
+            modern social experience built for creators.
           </p>
 
           <div className="hidden md:block text-slate-400 text-sm">
@@ -25,7 +36,6 @@ export default function Register() {
         <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4 sm:p-6">
           <RegisterForm />
         </div>
-
       </div>
     </section>
   );

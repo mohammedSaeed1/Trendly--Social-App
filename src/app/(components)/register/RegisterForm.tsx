@@ -86,14 +86,26 @@ export default function RegisterForm() {
         )}
       </div>
 
-      {/* Date */}
-      <div>
-        <Label className="text-slate-300">Date of Birth</Label>
-        <Input {...register("dateOfBirth")} type="date" className={inputClass} />
-         {(touchedFields.dateOfBirth || isSubmitted) && errors.dateOfBirth && (
-          <p className="text-red-400 text-sm">{errors.dateOfBirth.message}</p>
-        )}
-      </div>
+    {/* Date of Birth */}
+<div className="w-full">
+  <Label className="mb-1 block text-slate-300">
+    Date of Birth
+  </Label>
+
+  <Input
+    {...register("dateOfBirth")}
+    type="date"
+    className={`${inputClass} w-full min-h-12 text-sm sm:text-base`}
+  />
+
+  {(touchedFields.dateOfBirth || isSubmitted) &&
+    errors.dateOfBirth && (
+      <p className="mt-1 text-sm text-red-400">
+        {errors.dateOfBirth.message}
+      </p>
+    )}
+</div>
+      
 
       {/* Gender */}
       <ComboBox className="w-full">

@@ -7,7 +7,7 @@ import { useState } from 'react';
  export default function Bookmark({postId , isBookmarked} : {postId:string , isBookmarked:boolean}){
 
   const [bookmark , setBookmark] = useState(isBookmarked);
-
+  
 
   async function handleBookmark(){
     const isSuccessfully = await addBookmarkAndUnBookmark(postId);
