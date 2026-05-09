@@ -4,14 +4,19 @@ import { LoggedUserProfile, UserProfile } from "@/app/types/user.types";
 // import { toast } from "@heroui/react";
 import { followAndUnfollowUser } from "../SuggestedUsers/SuggestedUsers.actions";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function FollowUnFollowBtn({userProfile} : {userProfile : UserProfile | LoggedUserProfile}) {
 
     const [following, setFollowing] = useState<boolean>('isFollowing' in userProfile ? userProfile.isFollowing : false);
-
+        const router = useRouter();
+    
    async function handleFollowUnfollowUser(){
     const isfollow = await followAndUnfollowUser(userProfile.user._id);
-    setFollowing(isfollow);
+    if(isfollow){
+        setFollowing(isfollow);
+         router.refresh();
+    }
    }
 
     return (

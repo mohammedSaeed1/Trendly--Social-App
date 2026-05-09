@@ -83,6 +83,7 @@ export default function PostActionsMenu({ post }: { post: Post }) {
     if (isUpdatedSuccessfully) {
       setIsEditOpen(false);
       toast.success("Post updated successfully");
+      router.refresh();
     } else {
       toast.danger("Failed to update post");
     }
