@@ -38,17 +38,19 @@ export default function SendComment({ post }: { post: Post }) {
     }
   }
 
-  return (
-    <div className="flex items-center gap-2 sm:gap-3 border border-white/10 bg-white/5 rounded-xl px-3 sm:px-4 py-2 sm:py-3 w-full">
+  return return (
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 border border-white/10 bg-white/5 rounded-xl px-3 sm:px-4 py-2 sm:py-3 w-full">
 
-      {/* Avatar */}
-      <img
-        src={loggedUser.user.photo}
-        alt={loggedUser.user.name}
-        className="rounded-full w-8 h-8 sm:w-10 sm:h-10 object-cover shrink-0"
-      />
+    {/* Avatar */}
+    <img
+      src={loggedUser.user.photo}
+      alt={loggedUser.user.name}
+      className="rounded-full w-8 h-8 sm:w-10 sm:h-10 object-cover shrink-0"
+    />
 
-      {/* Input */}
+    {/* Input + Button wrapper */}
+    <div className="flex items-center gap-2 w-full">
+
       <input
         ref={commentContent}
         placeholder="Write a comment..."
@@ -60,13 +62,13 @@ export default function SendComment({ post }: { post: Post }) {
           text-white
           placeholder:text-slate-400
           min-w-0
+          px-1
         "
         onKeyDown={(e) => {
           if (e.key === "Enter") handleSendComment();
         }}
       />
 
-      {/* Button */}
       <button
         onClick={handleSendComment}
         disabled={isLoading}
@@ -74,13 +76,18 @@ export default function SendComment({ post }: { post: Post }) {
           bg-indigo-500 hover:bg-indigo-600
           disabled:opacity-50 disabled:cursor-not-allowed
           text-white text-xs sm:text-sm
-          px-3 sm:px-4 py-1.5
+          px-3 sm:px-4 py-2
           rounded-lg transition
           shrink-0
+          whitespace-nowrap
+          min-w-[60px]
         "
       >
         {isLoading ? "..." : "Post"}
       </button>
+
     </div>
-  );
+  </div>
+);
+  
 }
