@@ -38,7 +38,7 @@ export default function SendComment({ post }: { post: Post }) {
     }
   }
 
-  return return (
+  return(
   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 border border-white/10 bg-white/5 rounded-xl px-3 sm:px-4 py-2 sm:py-3 w-full">
 
     {/* Avatar */}
