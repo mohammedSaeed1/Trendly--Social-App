@@ -7,6 +7,11 @@ import PostCardUI from "./PostCardUI";
 export default async function PostCard({ post }: { post: Post }) {
   const cookie = await cookies();
   const token = cookie.get("usertoken")?.value;
+
+  if (!token) {
+    return <PostCardUI post={post} userId="" />;
+  }
+
   const { user }: { user: string } = jwtDecode(token);
 
   return (

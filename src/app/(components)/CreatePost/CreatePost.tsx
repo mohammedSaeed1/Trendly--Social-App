@@ -4,16 +4,17 @@ import Image from "next/image";
 import { useState, useRef, useContext } from "react";
 import { createPost } from "./CreatePost.actions";
 import { UserContext } from "@/app/Context/UserContext";
-import { LoggedUserProfile } from "@/app/types/user.types";
 
 export default function CreatePost() {
   const [isOpen, setIsOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const {loggedUser} : {loggedUser : LoggedUserProfile} = useContext(UserContext);
-
   const postContent = useRef<HTMLTextAreaElement | null>(null);
   const postImage = useRef<HTMLInputElement | null>(null);
+
+  const userContext = useContext(UserContext);
+  if (!userContext?.loggedUser) return null;
+  const { loggedUser } = userContext;
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];

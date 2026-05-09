@@ -6,11 +6,10 @@ import { toast } from "@heroui/react";
 import { useContext, useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
 import { UserContext } from "@/app/Context/UserContext";
-import { LoggedUserProfile } from "@/app/types/user.types";
 
 export default function Comments({comments,post}: {comments: Comment[],post: Post}) {
 
-   const {loggedUser} : {loggedUser : LoggedUserProfile} = useContext(UserContext);
+  const userContext = useContext(UserContext);
 
   const [activeEditCommentId, setActiveEditCommentId] = useState<string | null>(null);
   const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null);
@@ -18,6 +17,9 @@ export default function Comments({comments,post}: {comments: Comment[],post: Pos
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
+
+  if (!userContext) return null;
+  const { loggedUser } = userContext;
 
   function handleInputForUpdate(commentId: string) {
     setActiveEditCommentId((prev) => (prev === commentId ? null : commentId));

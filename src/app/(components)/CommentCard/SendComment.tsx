@@ -4,13 +4,13 @@ import {toast } from "@heroui/react";
 import { createComment } from "../PostCard/PostCard.actions";
 import { Post } from "@/app/types/post.types";
 import { UserContext } from "@/app/Context/UserContext";
-import { LoggedUserProfile } from "@/app/types/user.types";
 
 export default function SendComment({ post}: { post: Post}) {
   
-      const {loggedUser} : {loggedUser : LoggedUserProfile} =  useContext(UserContext);
-
-  const commentContent = useRef<HTMLInputElement>(null);
+      const userContext = useContext(UserContext);
+      const commentContent = useRef<HTMLInputElement>(null);
+      if (!userContext) return null;
+      const { loggedUser } = userContext;
 
   async function handleSendComment() {
     const form = new FormData();

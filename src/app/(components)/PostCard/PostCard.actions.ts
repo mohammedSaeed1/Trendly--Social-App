@@ -7,11 +7,11 @@ export async function addLikeAndUnLike(postId: string) {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/like`, {
             method: "PUT",
             headers: {
-                Token: token
+                Token: token || ""
             }
         })
         if (res.ok) {
-            revalidateTag(`getSinglePost${postId}`);
+            revalidateTag(`getSinglePost${postId}`,"max");
             return true;
         }
         else return false;
@@ -22,11 +22,11 @@ export async function addBookmarkAndUnBookmark(postId: string) {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/bookmark`, {
             method: "PUT",
             headers: {
-                Token: token
+                Token: token || ""
             }
         })
         if (res.ok) {
-            revalidateTag(`getSinglePost${postId}`);
+            revalidateTag(`getSinglePost${postId}`,"max");
             return true;
         }
         else return false;
@@ -37,13 +37,13 @@ export async function sharePost(postId: string , bodyContent? : string) {
             method: "POST",
             body: bodyContent ? JSON.stringify({body : bodyContent}) : undefined,
             headers: {
-                Token: token,
+                Token: token || "",
                 "Content-type": "application/json"
             }
         })
         if (res.ok) {
             const data = await res.json();
-            revalidateTag("posts");
+            revalidateTag("posts","max");
             return data.data.post;
         }
         else return false;   
@@ -53,11 +53,11 @@ export async function deletePost(postId: string) {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "DELETE",
             headers: {
-                Token: token,
+                Token: token || "",
             }
         })
         if (res.ok) {
-           revalidateTag("posts");
+           revalidateTag("posts","max");
             return true
         }
         else return false;
@@ -69,11 +69,11 @@ export async function updatePost(postId: string , values : FormData) {
             method: "PUT",
             body: values,
             headers: {
-                Token: token
+                Token: token || ""
             }
         })
         if (res.ok) {
-           revalidateTag(`posts`);
+           revalidateTag(`posts`,"max");
             return true;
         }
         else return false;
@@ -84,13 +84,13 @@ export async function createComment(postId : string , values : FormData){
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
         method: "POST",
         headers: {
-            "Token": token
+            "Token": token || ""
         },
         body: values
     });
     if(res.ok){
         const data = await res.json();
-        revalidateTag(`getPostComments${postId}`);
+        revalidateTag(`getPostComments${postId}`,"max");
         return data;
     }
     else return false;
@@ -101,7 +101,7 @@ export async function getPostComments(postId : string){
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
         method: "GET",
         headers: {
-            "Token": token
+            "Token": token || ""
         },
         next:{
             tags:[`getPostComments${postId}`]
@@ -119,11 +119,11 @@ export async function deleteComment(postId : string , commentId : string){
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}`, {
         method: "Delete",
         headers: {
-            "Token": token
+            "Token": token || ""
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`);
+        revalidateTag(`getPostComments${postId}`,"max");
         return true;
     }
     else return false;
@@ -135,11 +135,11 @@ export async function updateComment(postId : string , commentId : string , updat
         method: "PUT",
         body: updatedContent,
         headers: {
-            "Token": token
+            "Token": token || ""
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`);
+        revalidateTag(`getPostComments${postId}`,"max");
         return true;
     }
     else return false;
@@ -150,10 +150,11 @@ export async function addLikeAndUnlikeComment(postId : string , commentId : stri
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/like`, {
         method: "PUT",
         headers: {
-            "Token": token
+            "Token": token || ""
         },
     });
     if(res.ok){
+        revalidateTag(`getPostComments${postId}`,"max");
         return true;
     }
     else return false;
@@ -165,11 +166,11 @@ export async function createReply(postId : string , commentId : string , content
         method: "POST",
         body: content,
         headers: {
-            Token: token
+            Token: token || ""
         },
     });
     if(res.ok){
-        revalidateTag(`getCommentReplies${commentId}`);
+        revalidateTag(`getCommentReplies${commentId}`,"max");
         return true;
     }
     else return false;
@@ -180,7 +181,7 @@ export async function getCommentReplies(postId : string , commentId : string){
     const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/replies`, {
         method: "GET",
         headers: {
-            Token: token
+            Token: token || ""
         },
         next: {
             tags: [`getCommentReplies${commentId}`]

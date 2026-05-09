@@ -5,7 +5,7 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
     const token = await getToken();
     const res = await fetch("https://route-posts.routemisr.com/posts",{
      headers:{
-      Token : token
+      Token : token || ""
      },
      cache: "force-cache",
      next: {
@@ -24,7 +24,7 @@ export async function getSinglePost(postId: string) {
         const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
             method: "GET",
             headers: {
-                Token: token
+                Token: token || ""
             },
             next: {
               tags: [`getSinglePost${postId}`]

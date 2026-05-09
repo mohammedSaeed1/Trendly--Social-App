@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export default function FollowUnFollowBtn({userProfile} : {userProfile : UserProfile | LoggedUserProfile}) {
 
-    const [following, setFollowing] = useState<boolean>(userProfile.isFollowing);
+    const [following, setFollowing] = useState<boolean>('isFollowing' in userProfile ? userProfile.isFollowing : false);
 
    async function handleFollowUnfollowUser(){
     const isfollow = await followAndUnfollowUser(userProfile.user._id);

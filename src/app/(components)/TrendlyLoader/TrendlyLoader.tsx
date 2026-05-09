@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 
-export default function TrendlyLoader({ onFinish }) {
-  const [phase, setPhase] = useState("enter"); // enter → idle → exit
+type TrendlyLoaderProps = {
+  onFinish?: () => void;
+};
+
+export default function TrendlyLoader({ onFinish }: TrendlyLoaderProps) {
+  const [phase, setPhase] = useState("enter"); 
 
   useEffect(() => {
     // after 2.8s start exit animation, then call onFinish

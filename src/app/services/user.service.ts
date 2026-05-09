@@ -1,10 +1,10 @@
 import { getToken } from "../lib/auth";
 
 export async function getUserProfile(userId : string){
-    const token = await getToken();
+    const token  = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/${userId}/profile`,{
         headers:{
-            Token: token
+            Token: token || ""
         },
         next:{
             tags: [`getUserProfile${userId}`]
@@ -21,7 +21,7 @@ export async function getMyProfile(){
 
     const res = await fetch(`https://route-posts.routemisr.com/users/profile-data`,{
         headers:{
-            Token: token 
+            Token: token || ""
         }
     })
     if(res.ok){
@@ -34,7 +34,7 @@ export async function getFollowSuggestions(){
     const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/suggestions`,{
         headers:{
-            Token: token
+            Token: token || ""
         },
         cache: "force-cache",
         next:{
@@ -54,7 +54,7 @@ export async function getUserPosts(userId : string){
     const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/${userId}/posts`,{
         headers:{
-            Token: token
+            Token: token || ""
         },
         next:{
             tags: [`getUserPosts${userId}`]

@@ -4,16 +4,18 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
 import { UserContext } from "@/app/Context/UserContext";
-import { getUnreadCount } from "../notifications/Notifications.actions";
 import { LoggedUserProfile } from "@/app/types/user.types";
+import { getUnreadCount } from "../notifications/Notifications.actions";
 
 export default function Sidebar() {
   const path = usePathname();
   const router = useRouter();
 
-  const { loggedUser, userToken } :{loggedUser : LoggedUserProfile , userToken : string} = useContext(UserContext);
+  const { loggedUser, userToken } = useContext(UserContext) as {
+    loggedUser: LoggedUserProfile;
+    userToken: string;
+  };
 
   const [unreadCountNotifications, setUnreadCountNotifications] =
     useState<number>(0);

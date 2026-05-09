@@ -8,11 +8,11 @@ export async function uploadProfilePhoto(photo : FormData){
         method: "PUT",
         body: photo,
         headers:{
-            Token: token
+            Token: token || ""
         }
     })
     if(res.ok){
-        revalidateTag("getMyProfile");
+        revalidateTag("getMyProfile","max");
         return true;
     }
 }
@@ -21,7 +21,7 @@ export async function getBookmarks(){
     const token = await getToken();
     const res = await fetch(`https://route-posts.routemisr.com/users/bookmarks`,{
         headers:{
-            Token: token
+            Token: token || ""
         },
         next:{
             tags: ["getBookmarks"]

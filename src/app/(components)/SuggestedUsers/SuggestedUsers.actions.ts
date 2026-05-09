@@ -7,12 +7,12 @@ export async function followAndUnfollowUser(userId : string){
     const res = await fetch(`https://route-posts.routemisr.com/users/${userId}/follow`,{
         method: "PUT",
         headers:{
-            Token: token
+            Token: token || ""
         }
     })
     if(res.ok){
         const data = await res.json();
-        revalidateTag(`getUserProfile${userId}`);
+        revalidateTag(`getUserProfile${userId}`,"max");
         return data.data.following;
     }
 }

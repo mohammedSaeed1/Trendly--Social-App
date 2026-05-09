@@ -41,7 +41,7 @@ export default async function RootLayout({children}: Readonly<{children: React.R
   
   const user : LoggedUserProfile = await getMyProfile();
    
-  const userToken : string  = (await cookies()).get("usertoken")?.value;
+  const userToken : string = (await cookies()).get("usertoken")?.value ?? "";
 
   return (
     <>

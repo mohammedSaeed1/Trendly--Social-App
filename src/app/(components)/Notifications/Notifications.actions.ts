@@ -4,9 +4,10 @@ import { revalidateTag } from "next/cache";
 
 
 export async function getNotifications(){
+    const token = await getToken();
    const res = await fetch(`https://route-posts.routemisr.com/notifications`,{
         headers:{
-            Token : await getToken() || ""
+            Token : token || ""
         }
     })
     if(res.ok){
@@ -16,9 +17,10 @@ export async function getNotifications(){
 }
 
 export async function getUnreadCount(){
+    const token = await getToken();
    const res = await fetch(`https://route-posts.routemisr.com/notifications/unread-count`,{
         headers:{
-            Token : await getToken() || ""
+            Token : token || ""
         },
         next: {
             tags: ["getUnreadCount"]
@@ -31,21 +33,24 @@ export async function getUnreadCount(){
 }
 
 export async function markNotificationAsRead(notificationId : string){
+    const token = await getToken();
+
    const res = await fetch(`https://route-posts.routemisr.com/notifications/${notificationId}/read`,{
     method: "PATCH",
     headers:{
-        Token : await getToken() || ""
+        Token : token || ""
     }
    })
-    if(res.ok) revalidateTag("getUnreadCount");
+    if(res.ok) revalidateTag("getUnreadCount","max");
 }
 
 export async function markAllAsRead(){
+    const token = await getToken();
    const res = await fetch(`https://route-posts.routemisr.com/notifications/read-all`,{
         method: "PATCH",
     headers:{
-        Token : await getToken() || ""
+        Token : token || ""
     }
     })
-    if(res.ok) revalidateTag("getUnreadCount");
+    if(res.ok) revalidateTag("getUnreadCount","max");
 }
