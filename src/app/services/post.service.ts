@@ -18,6 +18,23 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
      return data?.data?.posts;
    }
    }
+   export async function getHomeFeed() :Promise<Post[] | undefined>{
+    const token = await getToken();
+    const res = await fetch("https://route-posts.routemisr.com/posts/feed?only=following&limit=20",{
+     headers:{
+      Token : token || ""
+     },
+     cache: "force-cache",
+     next: {
+      revalidate: 30,
+      tags: ["HomeFeed"]
+     }
+   })
+   if(res.ok){
+     const data = await res.json();     
+     return data?.data?.posts;
+   }
+   }
 
 export async function getSinglePost(postId: string) {
     const token = await getToken();

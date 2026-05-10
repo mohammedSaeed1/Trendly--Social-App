@@ -23,17 +23,22 @@ export default function Sidebar() {
 
   const links = [
     { label: "Home", href: "/", icon: "fa-house" },
-    { label: "Reels", href: "/reels", icon: "fa-clapperboard" },
     {
-      label: "Profile",
-      href: `/profile/${loggedUser?.user._id}`,
-      icon: "fa-user",
-    },
+     label: "Explore",
+     href: "/explore",
+     icon: "fa-compass",
+   },
+    { label: "Reels", href: "/reels", icon: "fa-clapperboard" },
     {
       label: "Notifications",
       href: "/notifications",
       icon: "fa-bell",
       badge: true,
+    },
+    {
+      label: "Profile",
+      href: `/profile/${loggedUser?.user._id}`,
+      icon: "fa-user",
     },
   ];
 

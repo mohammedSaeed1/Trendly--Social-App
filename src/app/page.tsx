@@ -1,4 +1,4 @@
-import { getAllPosts } from "./services/post.service";
+import { getHomeFeed } from "./services/post.service";
 import PostCard from "./(components)/PostCard/PostCard";
 import CreatePost from "./(components)/CreatePost/CreatePost";
 import TrendingHashtags from "./(components)/TrendingHashtags/TrendingHashtags";
@@ -6,7 +6,7 @@ import TrendingHashtags from "./(components)/TrendingHashtags/TrendingHashtags";
 
 
 export default async function Home() {
-  const posts = await getAllPosts();
+  const feedPosts = await getHomeFeed();
  
   return (
     <>
@@ -19,7 +19,7 @@ export default async function Home() {
 
             <CreatePost/>
 
-            {posts?.map((post) => (
+            {feedPosts?.map((post) => (
               <PostCard key={post._id} post={post} />
             ))}
 
