@@ -21,7 +21,6 @@ export default function Sidebar() {
     useState<number>(0);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
 
-
   const links = [
     { label: "Home", href: "/", icon: "fa-house" },
     { label: "Reels", href: "/reels", icon: "fa-clapperboard" },
@@ -40,7 +39,6 @@ export default function Sidebar() {
 
   async function getNotificationCount() {
     const count = await getUnreadCount();
-
     if (count) {
       setUnreadCountNotifications(count);
     }
@@ -66,11 +64,17 @@ export default function Sidebar() {
     if (!viewport) return;
 
     const handler = () => {
-      setKeyboardOpen(viewport.height < window.innerHeight * 0.75);
+      const keyboardHeight = window.innerHeight - viewport.height;
+      setKeyboardOpen(keyboardHeight > 100);
     };
 
     viewport.addEventListener("resize", handler);
-    return () => viewport.removeEventListener("resize", handler);
+    viewport.addEventListener("scroll", handler);
+
+    return () => {
+      viewport.removeEventListener("resize", handler);
+      viewport.removeEventListener("scroll", handler);
+    };
   }, []);
 
   return (
@@ -99,10 +103,11 @@ export default function Sidebar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`group relative flex items-center gap-4 rounded-2xl px-4 py-3 transition ${isActive
+                    className={`group relative flex items-center gap-4 rounded-2xl px-4 py-3 transition ${
+                      isActive
                         ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
                         : "text-slate-400 hover:bg-white/5 hover:text-white"
-                      }`}
+                    }`}
                   >
                     {/* Icon */}
                     <div className="relative">
@@ -121,9 +126,7 @@ export default function Sidebar() {
                         )}
                     </div>
 
-                    <span className="text-sm font-medium">
-                      {link.label}
-                    </span>
+                    <span className="text-sm font-medium">{link.label}</span>
                   </Link>
                 );
               })}
@@ -135,7 +138,6 @@ export default function Sidebar() {
                 className="hidden items-center gap-4 rounded-2xl px-4 py-3 text-slate-400 transition hover:bg-white/5 hover:text-white lg:flex"
               >
                 <i className="fa-solid fa-right-from-bracket text-lg"></i>
-
                 <span className="text-sm font-medium cursor-pointer text-red-400">
                   Logout
                 </span>
@@ -163,10 +165,7 @@ export default function Sidebar() {
         {/* Bottom */}
         <div className="mt-auto border-t border-white/10 p-6">
           <div className="rounded-2xl border border-indigo-500/20 bg-linear-to-br from-indigo-500/20 to-fuchsia-500/10 p-4">
-            <p className="text-sm font-medium text-white">
-              Trendly Social
-            </p>
-
+            <p className="text-sm font-medium text-white">Trendly Social</p>
             <p className="mt-1 text-xs text-slate-400">
               Share moments, connect, explore reels.
             </p>
@@ -175,8 +174,11 @@ export default function Sidebar() {
       </aside>
 
       {/* ───────── MOBILE BOTTOM BAR ───────── */}
-      <div className={`fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl lg:hidden ${keyboardOpen ? "hidden" : ""}`}>
-
+      <div
+        className={`fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl lg:hidden transition-transform duration-300 ${
+          keyboardOpen ? "translate-y-full" : "translate-y-0"
+        }`}
+      >
         {userToken &&
           links.map((link) => {
             const isActive = path === link.href;
@@ -185,12 +187,14 @@ export default function Sidebar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative flex flex-col items-center transition ${isActive ? "text-indigo-400" : "text-slate-400"
-                  }`}
+                className={`relative flex flex-col items-center transition ${
+                  isActive ? "text-indigo-400" : "text-slate-400"
+                }`}
               >
                 <div
-                  className={`relative flex h-11 w-11 items-center justify-center rounded-2xl ${isActive ? "bg-indigo-500/15" : ""
-                    }`}
+                  className={`relative flex h-11 w-11 items-center justify-center rounded-2xl ${
+                    isActive ? "bg-indigo-500/15" : ""
+                  }`}
                 >
                   <i className={`fa-solid ${link.icon} text-lg`} />
 
@@ -205,9 +209,7 @@ export default function Sidebar() {
                     )}
                 </div>
 
-                <span className="text-[11px] font-medium">
-                  {link.label}
-                </span>
+                <span className="text-[11px] font-medium">{link.label}</span>
               </Link>
             );
           })}
@@ -221,10 +223,7 @@ export default function Sidebar() {
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl">
               <i className="fa-solid fa-right-from-bracket text-lg"></i>
             </div>
-
-            <span className="text-[11px] font-medium">
-              Logout
-            </span>
+            <span className="text-[11px] font-medium">Logout</span>
           </button>
         ) : (
           <>
@@ -235,10 +234,7 @@ export default function Sidebar() {
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl">
                 <i className="fa-solid fa-arrow-right-to-bracket text-lg"></i>
               </div>
-
-              <span className="text-[11px] font-medium">
-                Login
-              </span>
+              <span className="text-[11px] font-medium">Login</span>
             </Link>
 
             <Link
@@ -248,10 +244,7 @@ export default function Sidebar() {
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl">
                 <i className="fa-solid fa-user-plus text-lg"></i>
               </div>
-
-              <span className="text-[11px] font-medium">
-                Register
-              </span>
+              <span className="text-[11px] font-medium">Register</span>
             </Link>
           </>
         )}
