@@ -11,6 +11,15 @@ export interface User{
   followingCount: number;
   bookmarksCount: number;
   createdAt: string;
+  followers?:  {
+                    "_id": string,
+                    "name": string,
+                    "photo": string,
+                    "followersCount": number,
+                    "followingCount": number,
+                    "bookmarksCount": number,
+                    "id": string
+                }[] | undefined
 }
 
 export interface LoggedUserProfile {
