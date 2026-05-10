@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  useState,
-  useCallback,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /* ===================== TYPES ===================== */
 
@@ -31,61 +26,17 @@ type VideoItem = {
 
 const API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY as string;
 
-const queries: string[] = [
+const queries = [
   "egypt",
   "cairo",
-  "alexandria",
-  "egypt street",
-  "cairo street",
-  "arab street",
-  "middle east",
-  "egypt bazaar",
-  "local market",
-  "downtown cairo",
-  "night cairo",
-  "nile river",
-  "egypt travel",
-  "egypt food",
-  "egypt lifestyle",
+  "travel",
   "food",
   "street food",
-  "restaurant",
-  "cooking",
-  "food vlog",
-  "delicious food",
-  "dessert",
-  "coffee",
-  "breakfast",
-  "pizza",
-  "burgers",
-  "travel",
-  "city life",
-  "sunset",
-  "night city",
   "nature",
-  "mountains",
-  "beach",
-  "vacation",
   "gym",
   "fitness",
-  "workout",
-  "bodybuilding",
-  "running",
-  "motivation",
-  "people",
-  "street portrait",
-  "daily life",
-  "walking",
-  "friends",
   "cars",
-  "luxury car",
-  "driving",
-  "supercar",
-  "traffic",
-  "aesthetic",
   "cinematic",
-  "slow motion",
-  "neon lights",
   "viral video",
 ];
 
@@ -94,16 +45,11 @@ const queries: string[] = [
 function pickFile(files: VideoFile[]): VideoFile | undefined {
   return (
     files.find(
-      (f) =>
-        f.file_type === "video/mp4" &&
-        (f.height ?? 0) <= 720
+      (file) =>
+        file.file_type === "video/mp4" &&
+        (file.height ?? 0) <= 720
     ) ||
-    files.find(
-      (f) =>
-        f.file_type === "video/mp4" &&
-        (f.height ?? 0) <= 1080
-    ) ||
-    files.find((f) => f.file_type === "video/mp4") ||
+    files.find((file) => file.file_type === "video/mp4") ||
     files[0]
   );
 }
@@ -118,10 +64,10 @@ export default function ReelsPro() {
   const [loadedVideos, setLoadedVideos] = useState<Record<number, boolean>>({});
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const pageRef = useRef(1);
+  const fetchObserverRef = useRef<IntersectionObserver | null>(null);
 
-  /* ===================== LOAD SAVED MUTE ===================== */
+  /* ===================== LOAD SAVED SOUND STATE ===================== */
 
   useEffect(() => {
     const saved = localStorage.getItem("reels-muted");
@@ -129,20 +75,6 @@ export default function ReelsPro() {
       setIsMuted(saved === "true");
     }
   }, []);
-
-  /* ===================== SYNC MUTE ===================== */
-
-  useEffect(() => {
-    videoRefs.current.forEach((video, i) => {
-      if (!video) return;
-
-      if (i === activeIndex) {
-        video.muted = isMuted;
-      } else {
-        video.muted = true;
-      }
-    });
-  }, [activeIndex, isMuted]);
 
   /* ===================== FETCH VIDEOS ===================== */
 
@@ -152,12 +84,12 @@ export default function ReelsPro() {
     setLoading(true);
 
     try {
-      const q =
+      const query =
         queries[Math.floor(Math.random() * queries.length)];
 
       const res = await fetch(
         `https://api.pexels.com/videos/search?query=${encodeURIComponent(
-          q
+          query
         )}&orientation=portrait&per_page=6&page=${pageRef.current}`,
         {
           headers: {
@@ -174,51 +106,73 @@ export default function ReelsPro() {
       const data = await res.json();
 
       const filtered: VideoItem[] = (data.videos || []).filter(
-        (v: VideoItem) =>
-          v.duration <= 30 &&
-          v.video_files?.length > 0
+        (video: VideoItem) =>
+          video.duration <= 30 &&
+          video.video_files?.length > 0
       );
 
       setVideos((prev) => [...prev, ...filtered]);
       pageRef.current += 1;
     } catch (error) {
-      console.error("Fetch videos error:", error);
+      console.error("Fetch Error:", error);
     } finally {
       setLoading(false);
     }
   }, [loading]);
 
+  /* ===================== INITIAL FETCH ===================== */
+
   useEffect(() => {
     fetchVideos();
-  }, [fetchVideos]);
+  }, []);
 
-  /* ===================== VIDEO OBSERVER ===================== */
+  /* ===================== PLAY ACTIVE VIDEO ===================== */
+
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+
+      if (index === activeIndex) {
+        video.muted = isMuted;
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.muted = true;
+      }
+    });
+  }, [activeIndex, isMuted]);
+
+  /* ===================== INTERSECTION OBSERVER ===================== */
 
   useEffect(() => {
     if (!videos.length) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
+        let bestEntry: IntersectionObserverEntry | null = null;
+
         entries.forEach((entry) => {
-          const video = entry.target as HTMLVideoElement;
-          const idx = Number(video.dataset.index);
-
-          if (entry.isIntersecting) {
-            setActiveIndex(idx);
-
-            video.currentTime = 0;
-            video
-              .play()
-              .catch(() => {
-                // autoplay may fail on some browsers
-              });
-          } else {
-            video.pause();
+          if (
+            entry.isIntersecting &&
+            (!bestEntry ||
+              entry.intersectionRatio >
+                bestEntry.intersectionRatio)
+          ) {
+            bestEntry = entry;
           }
         });
+
+        if (bestEntry) {
+          const index = Number(
+            (bestEntry.target as HTMLVideoElement).dataset
+              .index
+          );
+
+          setActiveIndex(index);
+        }
       },
       {
-        threshold: 0.85,
+        threshold: [0.6, 0.8, 1],
       }
     );
 
@@ -231,56 +185,57 @@ export default function ReelsPro() {
 
   /* ===================== INFINITE SCROLL ===================== */
 
-  const lastRef = useCallback(
+  const lastVideoRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
+      if (loading) return;
+
+      if (fetchObserverRef.current) {
+        fetchObserverRef.current.disconnect();
       }
 
-      observerRef.current = new IntersectionObserver(
+      fetchObserverRef.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && !loading) {
+          if (entries[0]?.isIntersecting) {
             fetchVideos();
           }
         },
         {
-          rootMargin: "1000px",
+          rootMargin: "600px",
         }
       );
 
-      if (node) observerRef.current.observe(node);
+      if (node) {
+        fetchObserverRef.current.observe(node);
+      }
     },
-    [fetchVideos, loading]
+    [loading, fetchVideos]
   );
 
-  /* ===================== TOGGLE SOUND ===================== */
+  /* ===================== SOUND ===================== */
 
   const toggleSound = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    localStorage.setItem(
-      "reels-muted",
-      String(newMuted)
-    );
+    localStorage.setItem("reels-muted", String(newMuted));
   };
 
   /* ===================== UI ===================== */
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 pl-0 sm:pl-[80px]">
-      <div className="relative h-[92vh] w-full max-w-[420px] overflow-y-scroll snap-y snap-mandatory rounded-[28px] border border-white/10 bg-black shadow-[0_0_40px_rgba(0,0,0,0.6)] scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        
-        {/* No API key */}
-        {!API_KEY && (
-          <div className="flex h-full items-center justify-center px-4 text-center text-sm text-red-400">
-            Pexels API key is missing.
-          </div>
-        )}
+  if (!API_KEY) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-black text-red-400">
+        Pexels API key is missing.
+      </div>
+    );
+  }
 
-        {/* Empty state */}
-        {API_KEY && videos.length === 0 && !loading && (
-          <div className="flex h-full items-center justify-center text-sm text-white/60">
-            No videos found.
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 sm:pl-[80px]">
+      <div className="relative h-[92vh] w-full max-w-[420px] overflow-y-auto snap-y snap-mandatory rounded-[28px] border border-white/10 bg-black shadow-2xl [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+        {/* Empty State */}
+        {videos.length === 0 && loading && (
+          <div className="flex h-full items-center justify-center text-white/70">
+            Loading videos...
           </div>
         )}
 
@@ -289,31 +244,31 @@ export default function ReelsPro() {
 
           if (!file) return null;
 
-          const isLoaded = loadedVideos[video.id];
+          const isLoaded = loadedVideos[video.id] ?? false;
 
           return (
             <div
               key={`${video.id}-${index}`}
               ref={
                 index === videos.length - 1
-                  ? lastRef
+                  ? lastVideoRef
                   : null
               }
-              className="relative flex h-screen snap-start items-center justify-center bg-black"
+              className="relative h-screen snap-start bg-black"
             >
-              {/* Poster Image */}
+              {/* Skeleton */}
+              {!isLoaded && (
+                <div className="absolute inset-0 z-0 animate-pulse bg-zinc-900" />
+              )}
+
+              {/* Poster */}
               <img
                 src={video.image}
                 alt={video.user.name}
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                className={`absolute inset-0 z-0 h-full w-full object-cover transition-opacity duration-500 ${
                   isLoaded ? "opacity-0" : "opacity-100"
                 }`}
               />
-
-              {/* Skeleton */}
-              {!isLoaded && (
-                <div className="absolute inset-0 animate-pulse bg-zinc-900" />
-              )}
 
               {/* Video */}
               <video
@@ -323,35 +278,41 @@ export default function ReelsPro() {
                 data-index={index}
                 src={file.link}
                 poster={video.image}
-                className={`h-full w-full object-cover transition-opacity duration-500 ${
+                className={`relative z-10 h-full w-full object-cover transition-opacity duration-500 ${
                   isLoaded ? "opacity-100" : "opacity-0"
                 }`}
-                loop
                 autoPlay
+                loop
                 playsInline
-                muted
-                preload="metadata"
-                onLoadedData={() =>
+                muted={index === activeIndex ? isMuted : true}
+                preload={index === activeIndex ? "auto" : "metadata"}
+                onCanPlay={() => {
                   setLoadedVideos((prev) => ({
                     ...prev,
                     [video.id]: true,
-                  }))
-                }
+                  }));
+
+                  if (index === activeIndex) {
+                    videoRefs.current[index]
+                      ?.play()
+                      .catch(() => {});
+                  }
+                }}
               />
 
               {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
               {/* Sound Button */}
               <button
                 onClick={toggleSound}
-                className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-black/40 p-2 text-white backdrop-blur-md transition hover:scale-110"
+                className="absolute right-4 top-4 z-30 rounded-full border border-white/20 bg-black/40 p-2 text-white backdrop-blur-md"
               >
                 {isMuted ? "🔇" : "🔊"}
               </button>
 
-              {/* Info */}
-              <div className="absolute bottom-6 left-4 z-20 text-white">
+              {/* Video Info */}
+              <div className="absolute bottom-6 left-4 z-30 text-white">
                 <p className="font-semibold">
                   @{video.user.name}
                 </p>
@@ -363,10 +324,10 @@ export default function ReelsPro() {
           );
         })}
 
-        {/* Loading More */}
+        {/* Bottom Loading */}
         {loading && videos.length > 0 && (
           <div className="py-4 text-center text-sm text-white/60">
-            Loading videos...
+            Loading more videos...
           </div>
         )}
       </div>
