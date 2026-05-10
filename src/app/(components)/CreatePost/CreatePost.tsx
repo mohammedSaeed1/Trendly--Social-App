@@ -102,7 +102,7 @@ export default function CreatePost() {
         onOpenChange={(open) => setIsOpen(open)}
       >
         <Modal.Backdrop variant="blur">
-          <Modal.Container>
+          <Modal.Container placement="center" >
             <Modal.Dialog className="bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 border border-white/10 rounded-2xl shadow-2xl">
 
               <Modal.CloseTrigger />

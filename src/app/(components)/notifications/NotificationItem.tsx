@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import { Notification } from "@/app/types/notification.types";
-import {markNotificationAsRead , markAllAsRead} from "./Notifications.actions";
+import {markNotificationAsRead , markAllAsRead, getUnreadCount} from "./Notifications.actions";
+import { useRouter } from "next/navigation";
 
 function formatTime(date: string) {
   return new Date(date).toLocaleString("en-US", {
@@ -30,11 +31,15 @@ function getMessage(type: string) {
 
 export default function NotificationItem({notifications}:{notifications: Notification[]}){
 
+  const router = useRouter();
+
 async function handleReadAllNotifications(){
    await markAllAsRead();
+  router.refresh();
 }
 async function handleReadNotification(notificationId : string){
   await markNotificationAsRead(notificationId);
+  router.refresh();
 }
 
   return (
@@ -50,14 +55,14 @@ async function handleReadNotification(notificationId : string){
           onClick={handleReadAllNotifications}
           className="text-xs text-indigo-400 hover:text-indigo-300 cursor-pointer"
         >
-           {notifications.length > 0 &&  "Mark all as read" }  
+           {notifications?.length > 0 &&  "Mark all as read" }  
         </button>
       </div>
 
       {/* List */}
       <div className="max-w-xl mx-auto space-y-3">
 
-         { notifications.length > 0 ? notifications.map((notification) => 
+         { notifications?.length > 0 ? notifications?.map((notification) => 
            <div 
               key={notification._id}
               onClick={() => handleReadNotification(notification._id)}

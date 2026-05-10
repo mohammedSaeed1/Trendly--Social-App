@@ -19,6 +19,8 @@ export default function Sidebar() {
 
   const [unreadCountNotifications, setUnreadCountNotifications] =
     useState<number>(0);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
 
   const links = [
     { label: "Home", href: "/", icon: "fa-house" },
@@ -48,9 +50,7 @@ export default function Sidebar() {
     await fetch("/api/logout", {
       method: "POST",
     });
-
     setUnreadCountNotifications(0);
-
     router.push("/login");
     router.refresh();
   }
@@ -60,6 +60,18 @@ export default function Sidebar() {
       getNotificationCount();
     }
   }, [userToken]);
+
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handler = () => {
+      setKeyboardOpen(viewport.height < window.innerHeight * 0.75);
+    };
+
+    viewport.addEventListener("resize", handler);
+    return () => viewport.removeEventListener("resize", handler);
+  }, []);
 
   return (
     <>
@@ -87,11 +99,10 @@ export default function Sidebar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`group relative flex items-center gap-4 rounded-2xl px-4 py-3 transition ${
-                      isActive
+                    className={`group relative flex items-center gap-4 rounded-2xl px-4 py-3 transition ${isActive
                         ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
                         : "text-slate-400 hover:bg-white/5 hover:text-white"
-                    }`}
+                      }`}
                   >
                     {/* Icon */}
                     <div className="relative">
@@ -164,8 +175,8 @@ export default function Sidebar() {
       </aside>
 
       {/* ───────── MOBILE BOTTOM BAR ───────── */}
-      <div className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl lg:hidden">
-       
+      <div className={`fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl lg:hidden ${keyboardOpen ? "hidden" : ""}`}>
+
         {userToken &&
           links.map((link) => {
             const isActive = path === link.href;
@@ -174,14 +185,12 @@ export default function Sidebar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative flex flex-col items-center transition ${
-                  isActive ? "text-indigo-400" : "text-slate-400"
-                }`}
+                className={`relative flex flex-col items-center transition ${isActive ? "text-indigo-400" : "text-slate-400"
+                  }`}
               >
                 <div
-                  className={`relative flex h-11 w-11 items-center justify-center rounded-2xl ${
-                    isActive ? "bg-indigo-500/15" : ""
-                  }`}
+                  className={`relative flex h-11 w-11 items-center justify-center rounded-2xl ${isActive ? "bg-indigo-500/15" : ""
+                    }`}
                 >
                   <i className={`fa-solid ${link.icon} text-lg`} />
 

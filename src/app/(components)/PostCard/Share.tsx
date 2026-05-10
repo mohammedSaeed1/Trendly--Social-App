@@ -49,7 +49,7 @@ const router = useRouter();
 
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <Modal.Backdrop variant="blur">
-          <Modal.Container>
+          <Modal.Container placement="center">
             <Modal.Dialog className="border border-white/10 bg-slate-900 text-white sm:max-w-xl">
               <Modal.CloseTrigger />
 

@@ -12,6 +12,7 @@ import { toast } from "@heroui/react";
 import { useContext, useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
 import { UserContext } from "@/app/Context/UserContext";
+import { useRouter } from "next/navigation";
 
 export default function Comments({
   comments,
@@ -29,7 +30,7 @@ export default function Comments({
 
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
-
+  const router = useRouter();
   if (!userContext) return null;
   const { loggedUser } = userContext;
 
@@ -69,6 +70,7 @@ export default function Comments({
 
   async function handleLike(commentId: string) {
     const ok = await addLikeAndUnlikeComment(post._id, commentId);
+    if(ok) router.refresh();
     if (!ok) toast.danger("Like failed");
   }
 
@@ -122,7 +124,7 @@ export default function Comments({
 
             {/* Comment */}
             <div className="bg-white/5 border border-white/10 rounded-xl px-3 sm:px-4 py-2 sm:py-3 backdrop-blur-md">
-              <p className="text-sm text-white leading-relaxed break-words">
+              <p className="text-sm text-white leading-relaxed wrap-break-word">
                 <span className="font-semibold mr-2">
                   {comment.commentCreator.name}
                 </span>
@@ -230,7 +232,7 @@ export default function Comments({
                         />
 
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-white break-words">
+                          <p className="text-sm text-white wrap-break-word">
                             <span className="font-semibold mr-2">
                               {reply.commentCreator.name}
                             </span>
@@ -253,14 +255,14 @@ export default function Comments({
               </div>
             )}
           </div>
-
           {/* Like */}
           <button
             onClick={() => handleLike(comment._id)}
-            className="text-slate-400 hover:text-red-400 transition shrink-0"
+            className="text-slate-400 transition shrink-0 pt-3"
           >
-            <i className="fa-regular fa-heart"></i>
+            <i className="fa-regular fa-heart text-md cursor-pointer"></i>
           </button>
+
         </div>
       ))}
     </div>

@@ -12,7 +12,7 @@ import { formatEgyptDate } from "@/app/utlitis/Date";
 
 export default function PostCardUI({post,userId}: {post: Post , userId: string}) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur-xl">
+    <div className=" rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur-xl">
       {/* Header */}
       <header className="flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
