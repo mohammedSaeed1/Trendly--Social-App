@@ -49,76 +49,43 @@ const queries: string[] = [
   "egypt lifestyle",
   "food",
   "street food",
-  "fast food",
   "restaurant",
   "cooking",
   "food vlog",
   "delicious food",
-  "tasty food",
-  "arab food",
   "dessert",
   "coffee",
   "breakfast",
-  "grilled food",
-  "bbq",
   "pizza",
   "burgers",
   "travel",
   "city life",
-  "urban life",
   "sunset",
-  "sunrise",
   "night city",
-  "cinematic city",
-  "beautiful places",
   "nature",
   "mountains",
   "beach",
   "vacation",
-  "road trip",
-  "wanderlust",
-  "aesthetic travel",
   "gym",
   "fitness",
   "workout",
   "bodybuilding",
-  "training",
-  "weight lifting",
   "running",
-  "healthy lifestyle",
   "motivation",
-  "gym motivation",
-  "strong body",
-  "fitness lifestyle",
   "people",
-  "street",
-  "crowd",
   "street portrait",
-  "lifestyle",
   "daily life",
   "walking",
-  "city people",
   "friends",
-  "social life",
   "cars",
   "luxury car",
   "driving",
-  "fast car",
   "supercar",
   "traffic",
-  "street cars",
-  "night driving",
-  "racing",
-  "engine sound",
   "aesthetic",
   "cinematic",
   "slow motion",
   "neon lights",
-  "vibe",
-  "dreamy",
-  "moody",
-  "soft light",
-  "creative shots",
   "viral video",
 ];
 
@@ -127,7 +94,14 @@ const queries: string[] = [
 function pickFile(files: VideoFile[]): VideoFile | undefined {
   return (
     files.find(
-      (f) => f.file_type === "video/mp4" && (f.height ?? 0) <= 720
+      (f) =>
+        f.file_type === "video/mp4" &&
+        (f.height ?? 0) <= 720
+    ) ||
+    files.find(
+      (f) =>
+        f.file_type === "video/mp4" &&
+        (f.height ?? 0) <= 1080
     ) ||
     files.find((f) => f.file_type === "video/mp4") ||
     files[0]
@@ -138,39 +112,53 @@ function pickFile(files: VideoFile[]): VideoFile | undefined {
 
 export default function ReelsPro() {
   const [videos, setVideos] = useState<VideoItem[]>([]);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMuted, setIsMuted] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadedVideos, setLoadedVideos] = useState<Record<number, boolean>>({});
 
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const pageRef = useRef<number>(1);
+  const pageRef = useRef(1);
 
-  /* 🔊 load saved mute state */
+  /* ===================== LOAD SAVED MUTE ===================== */
+
   useEffect(() => {
     const saved = localStorage.getItem("reels-muted");
-    if (saved !== null) setIsMuted(saved === "true");
+    if (saved !== null) {
+      setIsMuted(saved === "true");
+    }
   }, []);
 
-  /* mute sync */
+  /* ===================== SYNC MUTE ===================== */
+
   useEffect(() => {
     videoRefs.current.forEach((video, i) => {
       if (!video) return;
-      video.muted = i !== activeIndex ? true : isMuted;
+
+      if (i === activeIndex) {
+        video.muted = isMuted;
+      } else {
+        video.muted = true;
+      }
     });
   }, [activeIndex, isMuted]);
 
-  /* ===================== FETCH ===================== */
+  /* ===================== FETCH VIDEOS ===================== */
 
   const fetchVideos = useCallback(async () => {
-    if (loading) return;
+    if (loading || !API_KEY) return;
+
     setLoading(true);
 
     try {
-      const q = queries[Math.floor(Math.random() * queries.length)];
+      const q =
+        queries[Math.floor(Math.random() * queries.length)];
 
       const res = await fetch(
-        `https://api.pexels.com/videos/search?query=${q}&orientation=portrait&per_page=6&page=${pageRef.current}`,
+        `https://api.pexels.com/videos/search?query=${encodeURIComponent(
+          q
+        )}&orientation=portrait&per_page=6&page=${pageRef.current}`,
         {
           headers: {
             Authorization: API_KEY,
@@ -179,7 +167,7 @@ export default function ReelsPro() {
       );
 
       if (!res.ok) {
-        console.error("API error:", res.status);
+        console.error("Pexels API Error:", res.status);
         return;
       }
 
@@ -187,13 +175,14 @@ export default function ReelsPro() {
 
       const filtered: VideoItem[] = (data.videos || []).filter(
         (v: VideoItem) =>
-          v.duration <= 30 && v.video_files?.length
+          v.duration <= 30 &&
+          v.video_files?.length > 0
       );
 
       setVideos((prev) => [...prev, ...filtered]);
       pageRef.current += 1;
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error("Fetch videos error:", error);
     } finally {
       setLoading(false);
     }
@@ -203,7 +192,7 @@ export default function ReelsPro() {
     fetchVideos();
   }, [fetchVideos]);
 
-  /* ===================== OBSERVER ===================== */
+  /* ===================== VIDEO OBSERVER ===================== */
 
   useEffect(() => {
     if (!videos.length) return;
@@ -216,16 +205,26 @@ export default function ReelsPro() {
 
           if (entry.isIntersecting) {
             setActiveIndex(idx);
-            video.play().catch(() => {});
+
+            video.currentTime = 0;
+            video
+              .play()
+              .catch(() => {
+                // autoplay may fail on some browsers
+              });
           } else {
             video.pause();
           }
         });
       },
-      { threshold: 0.85 }
+      {
+        threshold: 0.85,
+      }
     );
 
-    videoRefs.current.forEach((v) => v && observer.observe(v));
+    videoRefs.current.forEach((video) => {
+      if (video) observer.observe(video);
+    });
 
     return () => observer.disconnect();
   }, [videos]);
@@ -234,67 +233,116 @@ export default function ReelsPro() {
 
   const lastRef = useCallback(
     (node: HTMLDivElement | null) => {
-      if (observerRef.current) observerRef.current.disconnect();
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
 
-      observerRef.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) fetchVideos();
-      });
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !loading) {
+            fetchVideos();
+          }
+        },
+        {
+          rootMargin: "1000px",
+        }
+      );
 
       if (node) observerRef.current.observe(node);
     },
-    [fetchVideos]
+    [fetchVideos, loading]
   );
 
-  /* ===================== UI ===================== */
+  /* ===================== TOGGLE SOUND ===================== */
 
   const toggleSound = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
-    localStorage.setItem("reels-muted", String(newMuted));
+    localStorage.setItem(
+      "reels-muted",
+      String(newMuted)
+    );
   };
+
+  /* ===================== UI ===================== */
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 pl-0 sm:pl-[80px]">
-      <div className="relative h-[92vh] w-full max-w-105 overflow-y-scroll snap-y snap-mandatory rounded-[28px] border border-white/10 bg-black shadow-[0_0_40px_rgba(0,0,0,0.6)] scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-
-        {/* empty */}
-        {videos.length === 0 && !loading && (
-          <div className="flex h-full items-center justify-center text-sm text-white/50">
-            No videos loaded. Check API key.
+      <div className="relative h-[92vh] w-full max-w-[420px] overflow-y-scroll snap-y snap-mandatory rounded-[28px] border border-white/10 bg-black shadow-[0_0_40px_rgba(0,0,0,0.6)] scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        
+        {/* No API key */}
+        {!API_KEY && (
+          <div className="flex h-full items-center justify-center px-4 text-center text-sm text-red-400">
+            Pexels API key is missing.
           </div>
         )}
 
-        {videos.map((v, i) => {
-          const file = pickFile(v.video_files);
+        {/* Empty state */}
+        {API_KEY && videos.length === 0 && !loading && (
+          <div className="flex h-full items-center justify-center text-sm text-white/60">
+            No videos found.
+          </div>
+        )}
+
+        {videos.map((video, index) => {
+          const file = pickFile(video.video_files);
+
           if (!file) return null;
+
+          const isLoaded = loadedVideos[video.id];
 
           return (
             <div
-              key={v.id}
-              ref={i === videos.length - 1 ? lastRef : null}
-              className="relative flex h-screen snap-start items-center justify-center"
+              key={`${video.id}-${index}`}
+              ref={
+                index === videos.length - 1
+                  ? lastRef
+                  : null
+              }
+              className="relative flex h-screen snap-start items-center justify-center bg-black"
             >
+              {/* Poster Image */}
               <img
-                src={v.image}
-                className="absolute h-full w-full object-cover"
-                alt=""
+                src={video.image}
+                alt={video.user.name}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                  isLoaded ? "opacity-0" : "opacity-100"
+                }`}
               />
 
+              {/* Skeleton */}
+              {!isLoaded && (
+                <div className="absolute inset-0 animate-pulse bg-zinc-900" />
+              )}
+
+              {/* Video */}
               <video
                 ref={(el) => {
-                  videoRefs.current[i] = el;
+                  videoRefs.current[index] = el;
                 }}
-                data-index={i}
+                data-index={index}
                 src={file.link}
-                className="h-full w-full object-cover"
+                poster={video.image}
+                className={`h-full w-full object-cover transition-opacity duration-500 ${
+                  isLoaded ? "opacity-100" : "opacity-0"
+                }`}
                 loop
+                autoPlay
                 playsInline
                 muted
                 preload="metadata"
+                onLoadedData={() =>
+                  setLoadedVideos((prev) => ({
+                    ...prev,
+                    [video.id]: true,
+                  }))
+                }
               />
 
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
+              {/* Sound Button */}
               <button
                 onClick={toggleSound}
                 className="absolute right-5 top-5 z-20 rounded-full border border-white/20 bg-black/40 p-2 text-white backdrop-blur-md transition hover:scale-110"
@@ -302,17 +350,23 @@ export default function ReelsPro() {
                 {isMuted ? "🔇" : "🔊"}
               </button>
 
+              {/* Info */}
               <div className="absolute bottom-6 left-4 z-20 text-white">
-                <p className="font-semibold">@{v.user.name}</p>
-                <p className="text-xs opacity-70">{v.duration}s</p>
+                <p className="font-semibold">
+                  @{video.user.name}
+                </p>
+                <p className="text-xs opacity-70">
+                  {video.duration}s
+                </p>
               </div>
             </div>
           );
         })}
 
-        {loading && (
+        {/* Loading More */}
+        {loading && videos.length > 0 && (
           <div className="py-4 text-center text-sm text-white/60">
-            Loading...
+            Loading videos...
           </div>
         )}
       </div>
