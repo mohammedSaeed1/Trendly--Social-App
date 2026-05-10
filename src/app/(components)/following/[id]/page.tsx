@@ -14,7 +14,7 @@ export default async function Following({params}:{params: Promise<{id : string}>
       <div className="mx-auto max-w-3xl">
         {/* Header */}
         <div className="mb-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-          <h1 className="text-3xl font-bold text-white">Followers</h1>
+          <h1 className="text-3xl font-bold text-white">Following</h1>
           <p className="mt-2 text-sm text-slate-400">
             People who follow this account.
           </p>
