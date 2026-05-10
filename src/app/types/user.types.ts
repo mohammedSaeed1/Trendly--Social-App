@@ -19,6 +19,15 @@ export interface User{
                     "followingCount": number,
                     "bookmarksCount": number,
                     "id": string
+                }[] | undefined,
+                following?:  {
+                    "_id": string,
+                    "name": string,
+                    "photo": string,
+                    "followersCount": number,
+                    "followingCount": number,
+                    "bookmarksCount": number,
+                    "id": string
                 }[] | undefined
 }
 

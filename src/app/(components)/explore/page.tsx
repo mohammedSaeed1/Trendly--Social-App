@@ -39,7 +39,7 @@ export default async function Explore() {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="sticky top-24 hidden self-start space-y-6 lg:col-span-4 lg:block">
+        <aside className="top-24 hidden self-start space-y-6 lg:col-span-4 lg:block">
           <TrendingHashtags />
         </aside>
       </div>

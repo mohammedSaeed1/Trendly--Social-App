@@ -6,7 +6,6 @@ import PostCard from "../PostCard/PostCard";
 import { UploadProfilePhoto } from "./UploadProfilePhoto";
 import Link from "next/link";
 import FollowUnFollowBtn from "./FollowUnFollowBtn";
-import Followers from "../followers/[id]/page";
 
 function joinedDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
@@ -120,7 +119,7 @@ export default function ProfileUI({
                     value: userProfile?.user.bookmarksCount,
                   },
                 ].map(({ label, value }) => (
-                  <Link  key={label} href={label === 'Followers' ? `/followers/${userProfile.user._id}` : '/following'}>
+                  <Link  key={label} href={label === 'Followers' ? `/followers/${userProfile.user._id}` : label === 'Following' ? `/following/${userProfile.user._id}` : `/profile/${userProfile.user._id}`}>
                   <div
                     className="rounded-2xl border border-white/10 bg-slate-900/60 py-4 text-center"
                   >
