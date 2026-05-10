@@ -175,9 +175,8 @@ export default function Sidebar() {
 
       {/* ───────── MOBILE BOTTOM BAR ───────── */}
       <div
-        className={`fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl lg:hidden transition-transform duration-300 ${
-          keyboardOpen ? "translate-y-full" : "translate-y-0"
-        }`}
+        className={`fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-white/10 bg-slate-950/90 backdrop-blur-xl
+  px-4 pb-[env(safe-area-inset-bottom)] lg:hidden transition-transform duration-300 ${keyboardOpen ? "translate-y-full" : "translate-y-0"}`}
       >
         {userToken &&
           links.map((link) => {

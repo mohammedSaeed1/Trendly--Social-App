@@ -106,6 +106,7 @@ export default function Comments({
   }
 
   return (
+    <div className="min-h-dvh pb-28">
     <div className="space-y-6 w-full">
       {comments.map((comment) => (
         <div
@@ -266,5 +267,6 @@ export default function Comments({
         </div>
       ))}
     </div>
+</div>
   );
 }
