@@ -35,8 +35,6 @@ function pickFile(files: VideoFile[]): VideoFile | undefined {
 }
 
 /* ─── Keyframes not in Tailwind defaults ─────────── */
-// If you've added them to tailwind.config.ts, remove this component
-// and replace the inline class names with animate-* equivalents.
 const Keyframes = () => (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
@@ -73,7 +71,6 @@ const Keyframes = () => (
 function AppLoadingScreen() {
   return (
     <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-7 bg-[#080810]">
-      {/* Floating logo */}
       <div className="relative animate-float">
         <div
           className="flex h-[72px] w-[72px] items-center justify-center rounded-[20px] text-4xl text-white"
@@ -87,7 +84,6 @@ function AppLoadingScreen() {
         <span className="animate-pulse-ring pointer-events-none absolute inset-[-8px] rounded-[24px] border-2 border-[#6c63ff]" />
       </div>
 
-      {/* Title */}
       <div className="text-center">
         <h1 className="shimmer-text font-['Syne'] text-[28px] font-extrabold tracking-tight">
           ReelsPro
@@ -97,7 +93,6 @@ function AppLoadingScreen() {
         </p>
       </div>
 
-      {/* Animated dots */}
       <div className="flex gap-2">
         {[0, 1, 2].map((i) => (
           <span
@@ -165,16 +160,16 @@ function InfoTag({ children }: { children: React.ReactNode }) {
 /* ─── Main Component ──────────────────────────────── */
 
 export default function ReelsPro() {
-  const [videos, setVideos]       = useState<VideoItem[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isMuted, setIsMuted]     = useState(true);
-  const [loading, setLoading]     = useState(false);
-  const [appReady, setAppReady]   = useState(false);
+  const [videos, setVideos]             = useState<VideoItem[]>([]);
+  const [activeIndex, setActiveIndex]   = useState(0);
+  const [isMuted, setIsMuted]           = useState(true);
+  const [loading, setLoading]           = useState(false);
+  const [appReady, setAppReady]         = useState(false);
   const [loadedVideos, setLoadedVideos] = useState<Record<number, boolean>>({});
-  const [likedVideos,  setLikedVideos]  = useState<Record<number, boolean>>({});
+  const [likedVideos, setLikedVideos]   = useState<Record<number, boolean>>({});
 
-  const videoRefs       = useRef<(HTMLVideoElement | null)[]>([]);
-  const pageRef         = useRef(1);
+  const videoRefs        = useRef<(HTMLVideoElement | null)[]>([]);
+  const pageRef          = useRef(1);
   const fetchObserverRef = useRef<IntersectionObserver | null>(null);
 
   /* restore mute */
@@ -211,7 +206,7 @@ export default function ReelsPro() {
     }
   }, [loading, appReady]);
 
-  useEffect(() => { fetchVideos(); }, []); // eslint-disable-line
+  useEffect(() => { fetchVideos(); }, []); 
 
   /* play active, pause others */
   useEffect(() => {
@@ -231,18 +226,31 @@ export default function ReelsPro() {
   /* intersection observer → active index */
   useEffect(() => {
     if (!videos.length) return;
+
     const obs = new IntersectionObserver(
-      (entries) => {
+      (entries: IntersectionObserverEntry[]) => {
         let best: IntersectionObserverEntry | null = null;
+
         entries.forEach((e) => {
-          if (e.isIntersecting && (!best || e.intersectionRatio > best.intersectionRatio))
+          if (
+            e.isIntersecting &&
+            (!best || e.intersectionRatio > best.intersectionRatio)
+          ) {
             best = e;
+          }
         });
-        if (best)
-          setActiveIndex(Number((best.target as HTMLElement).dataset.index));
+
+        // ✅ Fix: copy to a new const so TypeScript narrows the type correctly
+        const winner = best as IntersectionObserverEntry | null;
+        if (winner) {
+          const el  = winner.target as HTMLElement;
+          const idx = el.dataset.index;
+          if (idx !== undefined) setActiveIndex(Number(idx));
+        }
       },
       { threshold: [0.5, 0.75, 1] }
     );
+
     videoRefs.current.forEach((v) => v && obs.observe(v));
     return () => obs.disconnect();
   }, [videos]);
@@ -292,22 +300,14 @@ export default function ReelsPro() {
           {/* ════════ PHONE / FEED FRAME ════════ */}
           <div
             className={[
-              // Base (mobile): fixed full-screen
               "fixed inset-0 overflow-hidden bg-black",
-              // sm+: relative phone frame
               "sm:relative sm:inset-auto",
               "sm:h-[780px] sm:w-[370px]",
               "sm:rounded-[40px]",
               "sm:border sm:border-white/[.12]",
-              // xl: larger frame
               "xl:h-[840px] xl:w-[400px]",
             ].join(" ")}
-            style={{
-              // box-shadow not expressible cleanly via Tailwind on sm
-              // kept as inline for the framed variant
-            }}
           >
-            {/* Dynamic shadow applied via JS className on sm+ */}
             <style>{`
               @media(min-width:640px){
                 .phone-frame{
@@ -316,13 +316,13 @@ export default function ReelsPro() {
               }
             `}</style>
 
-            {/* Phone notch – hidden on mobile, shown sm+ */}
+            {/* Phone notch */}
             <div className="absolute left-1/2 top-0 z-[100] hidden h-[22px] w-[100px] -translate-x-1/2 rounded-b-[14px] bg-black sm:block" />
 
             {/* ── Scroll container ── */}
             <div className="snap-container h-full w-full phone-frame">
               {videos.map((video, index) => {
-                const file    = pickFile(video.video_files);
+                const file     = pickFile(video.video_files);
                 if (!file) return null;
                 const isLoaded = loadedVideos[video.id] ?? false;
                 const isLiked  = likedVideos[video.id]  ?? false;
@@ -333,17 +333,14 @@ export default function ReelsPro() {
                     ref={index === videos.length - 1 ? lastVideoRef : undefined}
                     className="snap-item relative h-svh w-full flex-shrink-0 bg-black"
                   >
-                    {/* Skeleton while buffering */}
                     {!isLoaded && <VideoSkeleton />}
 
-                    {/* Blurred poster */}
                     <img
                       src={video.image}
                       alt=""
                       className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${isLoaded ? "opacity-0" : "opacity-100"}`}
                     />
 
-                    {/* Video — lazy src: only set when within 2 of active */}
                     <video
                       ref={(el) => { videoRefs.current[index] = el; }}
                       data-index={index}
@@ -362,19 +359,17 @@ export default function ReelsPro() {
                       }}
                     />
 
-                    {/* Gradient vignette */}
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-black/30" />
 
-                    {/* ── Top-right: sound toggle ── */}
+                    {/* Sound toggle */}
                     <div className="absolute right-3.5 top-12 z-50">
                       <IconBtn onClick={toggleSound}>
                         {isMuted ? "🔇" : "🔊"}
                       </IconBtn>
                     </div>
 
-                    {/* ── Right side: like + share ── */}
+                    {/* Like */}
                     <div className="absolute bottom-24 right-3.5 z-50 flex flex-col items-center gap-[18px]">
-                      {/* Like */}
                       <button
                         onClick={() => toggleLike(video.id)}
                         className="flex cursor-pointer flex-col items-center gap-1 border-none bg-transparent"
@@ -391,7 +386,7 @@ export default function ReelsPro() {
                       </button>
                     </div>
 
-                    {/* ── Bottom: creator info ── */}
+                    {/* Creator info */}
                     <div className="animate-fade-up absolute bottom-7 left-4 right-[72px] z-50 text-[#f0f0ff]">
                       <p className="mb-1.5 truncate font-['Syne'] text-[15px] font-bold tracking-tight [text-shadow:0_2px_8px_rgba(0,0,0,.6)]">
                         @{video.user.name}
@@ -402,7 +397,7 @@ export default function ReelsPro() {
                       </div>
                     </div>
 
-                    {/* ── Progress dots ── */}
+                    {/* Progress dots */}
                     <div className="absolute top-3.5 left-1/2 z-[60] flex -translate-x-1/2 items-center gap-[5px]">
                       {videos
                         .slice(Math.max(0, index - 2), index + 3)
@@ -438,7 +433,6 @@ export default function ReelsPro() {
 
           {/* ════════ DESKTOP SIDEBAR (lg+) ════════ */}
           <div className="hidden lg:flex lg:flex-col lg:gap-6 lg:min-w-[180px] text-[#f0f0ff]">
-            {/* Brand */}
             <div>
               <h2 className="shimmer-text mb-1 font-['Syne'] text-[22px] font-extrabold tracking-tight">
                 ReelsPro
@@ -446,7 +440,6 @@ export default function ReelsPro() {
               <p className="font-['DM_Sans'] text-[13px] text-white/45">Scroll to discover</p>
             </div>
 
-            {/* Current video meta */}
             {activeVideo && (
               <div className="flex flex-col gap-2">
                 <p className="max-w-45 truncate font-['Syne'] text-base font-bold">
@@ -456,7 +449,6 @@ export default function ReelsPro() {
               </div>
             )}
 
-            {/* Progress bar */}
             <div className="flex flex-col gap-3.5">
               <p className="font-['DM_Sans'] text-[12px] uppercase tracking-widest text-white/45">
                 {activeIndex + 1} / {videos.length}
