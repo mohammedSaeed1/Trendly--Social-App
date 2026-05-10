@@ -22,7 +22,7 @@ export default async function Followers({params}:{params: Promise<{id : string}>
 
         {/* Users List */}
         <div className="space-y-4">
-          {userFollowers?.user?.followers?.map((user) => (
+          {userFollowers?.user?.followers?.length > 0 ? userFollowers?.user?.followers?.map((user) => (
             <div key={user.id}
               className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition hover:bg-white/10"
             >
@@ -47,7 +47,8 @@ export default async function Followers({params}:{params: Promise<{id : string}>
               </div>
             </Link>
             </div>
-          ))}
+          )) : <h2 className="text-white text-xl text-center py-7">No followers yet !</h2>}
+        
         </div>
       </div>
     </section>

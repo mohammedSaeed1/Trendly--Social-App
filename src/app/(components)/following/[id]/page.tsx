@@ -16,13 +16,13 @@ export default async function Following({params}:{params: Promise<{id : string}>
         <div className="mb-6 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
           <h1 className="text-3xl font-bold text-white">Following</h1>
           <p className="mt-2 text-sm text-slate-400">
-            People who follow this account.
+            People who you are following.
           </p>
         </div>
 
         {/* Users List */}
         <div className="space-y-4">
-          {userFollowwing?.user?.following?.map((user) => (
+          {userFollowwing?.user?.following?.length > 0 ?  userFollowwing?.user?.following?.map((user) => (
             <div key={user.id}
               className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition hover:bg-white/10"
             >
@@ -47,7 +47,7 @@ export default async function Following({params}:{params: Promise<{id : string}>
               </div>
             </Link>
             </div>
-          ))}
+          )) : <h2 className="text-white text-xl text-center py-7">No following yet !</h2> }  
         </div>
       </div>
     </section>
