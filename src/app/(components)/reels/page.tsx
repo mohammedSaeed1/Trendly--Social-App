@@ -246,114 +246,130 @@ export default function ReelsPro() {
 
   /* ===================== UI ===================== */
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 sm:pl-[80px]">
-      <div className="relative h-[92vh] w-full max-w-[420px] overflow-y-auto snap-y snap-mandatory rounded-[28px] border border-white/10 bg-black shadow-2xl scroll-smooth [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
-        {/* Initial Loading */}
-        {videos.length === 0 && loading && (
-          <div className="flex h-full items-center justify-center text-white/70">
-            Loading videos...
+ return (
+  <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 sm:pl-[80px]">
+    {/* Mobile-first container */}
+    <div className="mx-auto h-screen w-full max-w-[420px] bg-black sm:h-[92vh] sm:rounded-[28px] sm:border sm:border-white/10 sm:shadow-2xl overflow-y-auto snap-y snap-mandatory scroll-smooth [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
+      
+      {/* Initial loading screen */}
+      {videos.length === 0 && loading && (
+        <div className="flex h-screen items-center justify-center bg-black">
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-white" />
+            <p className="text-sm text-white/70">Loading reels...</p>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Videos */}
-        {videos.map((video, index) => {
-          const file = pickFile(video.video_files);
+      {videos.map((video, index) => {
+        const file = pickFile(video.video_files);
+        if (!file) return null;
 
-          if (!file) return null;
+        const isLoaded = loadedVideos[video.id] ?? false;
 
-          const isLoaded = loadedVideos[video.id] ?? false;
+        return (
+          <div
+            key={`${video.id}-${index}`}
+            ref={index === videos.length - 1 ? lastVideoRef : null}
+            className="relative h-screen snap-start bg-black"
+          >
+            {/* Beautiful loading screen while video loads */}
+            {!isLoaded && (
+              <div className="absolute inset-0 z-30 flex items-center justify-center bg-black">
+                {/* Background poster */}
+                <img
+                  src={video.image}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover blur-md scale-110 opacity-30"
+                />
 
-          return (
-            <div
-              key={`${video.id}-${index}`}
-              ref={index === videos.length - 1 ? lastVideoRef : null}
-              className="relative h-screen snap-start bg-black"
-            >
-              {/* Skeleton */}
-              {!isLoaded && (
-                <div className="absolute inset-0 animate-pulse bg-zinc-900" />
-              )}
-
-              {/* Poster */}
-              <img
-                src={video.image}
-                alt={video.user.name}
-                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
-                  isLoaded ? "opacity-0" : "opacity-100"
-                }`}
-              />
-
-              {/* Video */}
-              <video
-                ref={(el) => {
-                  videoRefs.current[index] = el;
-                }}
-                data-index={index}
-                src={file.link}
-                poster={video.image}
-                className={`h-full w-full object-cover transition-opacity duration-500 ${
-                  isLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                autoPlay
-                loop
-                muted={index === activeIndex ? isMuted : true}
-                playsInline
-                preload={index === activeIndex ? "auto" : "metadata"}
-                controls={false}
-                onCanPlay={() => {
-                  setLoadedVideos((prev) => ({
-                    ...prev,
-                    [video.id]: true,
-                  }));
-
-                  if (index === activeIndex) {
-                    const currentVideo = videoRefs.current[index];
-
-                    if (currentVideo) {
-                      currentVideo.muted = isMuted;
-
-                      const playPromise = currentVideo.play();
-
-                      if (playPromise !== undefined) {
-                        playPromise.catch(() => {
-                          setTimeout(() => {
-                            currentVideo.play().catch(() => {});
-                          }, 100);
-                        });
-                      }
-                    }
-                  }
-                }}
-              />
-
-              {/* Overlay */}
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              {/* Sound Button */}
-              <button
-                onClick={toggleSound}
-                className="absolute right-4 top-4 z-20 rounded-full border border-white/20 bg-black/40 p-2 text-white backdrop-blur-md transition hover:scale-110"
-              >
-                {isMuted ? "🔇" : "🔊"}
-              </button>
-
-              {/* User Info */}
-              <div className="absolute bottom-6 left-4 z-20 text-white">
-                <p className="font-semibold">@{video.user.name}</p>
-                <p className="text-xs opacity-70">{video.duration}s</p>
+                {/* Loader */}
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                  <div className="h-12 w-12 animate-spin rounded-full border-4 border-white/20 border-t-white" />
+                  <p className="text-sm text-white/80">Loading video...</p>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            )}
 
-        {/* Loading More */}
-        {loading && videos.length > 0 && (
-          <div className="py-4 text-center text-sm text-white/60">
-            Loading more videos...
+            {/* Poster */}
+            <img
+              src={video.image}
+              alt={video.user.name}
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${
+                isLoaded ? "opacity-0" : "opacity-100"
+              }`}
+            />
+
+            {/* Video */}
+            <video
+              ref={(el) => {
+                videoRefs.current[index] = el;
+              }}
+              data-index={index}
+              src={file.link}
+              poster={video.image}
+              className={`h-full w-full object-cover transition-opacity duration-500 ${
+                isLoaded ? "opacity-100" : "opacity-0"
+              }`}
+              autoPlay
+              loop
+              muted={index === activeIndex ? isMuted : true}
+              playsInline
+              preload={index === activeIndex ? "auto" : "metadata"}
+              controls={false}
+              onCanPlay={() => {
+                setLoadedVideos((prev) => ({
+                  ...prev,
+                  [video.id]: true,
+                }));
+
+                if (index === activeIndex) {
+                  const currentVideo = videoRefs.current[index];
+
+                  if (currentVideo) {
+                    currentVideo.muted = isMuted;
+
+                    currentVideo.play().catch(() => {
+                      setTimeout(() => {
+                        currentVideo.play().catch(() => {});
+                      }, 100);
+                    });
+                  }
+                }
+              }}
+            />
+
+            {/* Overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* Sound Button */}
+            <button
+              onClick={toggleSound}
+              className="absolute right-3 top-3 z-40 rounded-full border border-white/20 bg-black/40 p-2 text-white backdrop-blur-md sm:right-4 sm:top-4"
+            >
+              {isMuted ? "🔇" : "🔊"}
+            </button>
+
+            {/* User Info */}
+            <div className="absolute bottom-6 left-4 right-4 z-40 text-white">
+              <p className="truncate text-sm font-semibold sm:text-base">
+                @{video.user.name}
+              </p>
+              <p className="text-xs opacity-70">
+                {video.duration}s
+              </p>
+            </div>
           </div>
-        )}
-      </div>
+        );
+      })}
+
+      {/* Loading more */}
+      {loading && videos.length > 0 && (
+        <div className="py-4 text-center text-sm text-white/60">
+          Loading more videos...
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 }
