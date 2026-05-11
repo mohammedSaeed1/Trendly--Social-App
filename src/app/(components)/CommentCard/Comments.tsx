@@ -26,7 +26,7 @@ export default function Comments({
   const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null);
   const [visibleRepliesCommentId, setVisibleRepliesCommentId] = useState<string | null>(null);
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
-
+  const [isLikedComment, setIsLikedComment] = useState(false);
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
   if (!userContext) return null;
@@ -67,8 +67,14 @@ export default function Comments({
   }
 
   async function handleLike(commentId: string) {
-    const ok = await addLikeAndUnlikeComment(post._id, commentId);
-    if (!ok) toast.danger("Like failed");
+    try{
+      const ok = await addLikeAndUnlikeComment(post._id, commentId);
+     setIsLikedComment(ok);
+    }
+    catch(_){
+      toast.danger("Failed while you trying to add or remove like");
+    }
+     
   }
 
   async function handleReplySubmit(commentId: string) {
@@ -256,9 +262,9 @@ export default function Comments({
           {/* Like */}
           <button
             onClick={() => handleLike(comment._id)}
-            className="text-slate-400 transition shrink-0 pt-3"
+            className={`text-slate-400 transition shrink-0 pt-3`}
           >
-            <i className="fa-regular fa-heart text-md cursor-pointer"></i>
+            <i className={`fa-solid fa-heart text-md cursor-pointer ${isLikedComment ? 'text-red-500' : 'text-[#637188]' }`}></i>
           </button>
 
         </div>

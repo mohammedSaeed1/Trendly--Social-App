@@ -27,6 +27,7 @@ export async function addBookmarkAndUnBookmark(postId: string) {
         })
         if (res.ok) {
             updateTag(`getSinglePost${postId}`);
+            updateTag(`getBookmarks`);
             return true;
         }
         else return false;
@@ -157,8 +158,9 @@ export async function addLikeAndUnlikeComment(postId : string , commentId : stri
         },
     });
     if(res.ok){
+        const data = await res.json();
         updateTag(`getPostComments${postId}`);
-        return true;
+        return data.data.liked;
     }
     else return false;
 }

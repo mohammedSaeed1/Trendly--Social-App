@@ -63,7 +63,7 @@ async function handleReadNotification(notificationId : string){
           <Link key={notification._id} href={notification.type === 'like_post' || notification.type === 'comment_post' || notification.type === 'share_post' ? `/posts/${notification?.entity?._id}` : '/' }>
            <div 
               onClick={() => handleReadNotification(notification._id)}
-              className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer transition
+              className={`flex items-start gap-3 p-3 my-4 rounded-2xl border cursor-pointer transition
                 ${
                   notification.isRead
                     ? "bg-white/5 border-white/10"

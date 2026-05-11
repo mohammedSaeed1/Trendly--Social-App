@@ -18,6 +18,9 @@ export default async function Following({params}:{params: Promise<{id : string}>
             People who you are following.
           </p>
         </div>
+          <Link href={`/profile/${userId}`} className="flex h-10 w-10 mb-2 ms-1 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10">
+      ←
+    </Link>
 
         {/* Users List */}
         <div className="space-y-4">

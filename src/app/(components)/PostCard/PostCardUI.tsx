@@ -10,14 +10,13 @@ import PostActionsMenu from "./PostActionsMenu";
 import { Post } from "@/app/types/post.types";
 import { formatEgyptDate } from "@/app/utlitis/Date";
 import { useContext } from "react";
-import { UserContext, UserContextValue } from "@/app/Context/UserContext";
-import { LoggedUserProfile } from "@/app/types/user.types";
+import { UserContext} from "@/app/Context/UserContext";
 
 export default function PostCardUI({post}: {post: Post}) {
 
 
- const {loggedUser} : {loggedUser : LoggedUserProfile} = useContext<UserContextValue | null>(UserContext);
-   
+ const userContext = useContext(UserContext);
+ const loggedUser = userContext?.loggedUser;   
  
   return (
     <div className=" rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur-xl">
