@@ -19,7 +19,7 @@ export interface User{
                     "followingCount": number,
                     "bookmarksCount": number,
                     "id": string
-                }[] | undefined,
+                }[] ,
                 following?:  {
                     "_id": string,
                     "name": string,
@@ -28,7 +28,7 @@ export interface User{
                     "followingCount": number,
                     "bookmarksCount": number,
                     "id": string
-                }[] | undefined
+                }[]
 }
 
 export interface LoggedUserProfile {

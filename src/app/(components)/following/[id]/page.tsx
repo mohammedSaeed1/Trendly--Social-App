@@ -7,7 +7,7 @@ export default async function Following({params}:{params: Promise<{id : string}>
 
   const userId = (await params).id;
   const userFollowwing : UserProfile = await getUserProfile(userId);
-
+  if(userFollowwing?.user?.following?.length)
 
   return (
         <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8 lg:pl-72">
