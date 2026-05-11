@@ -2,7 +2,7 @@
 import { createContext} from "react";
 import { LoggedUserProfile} from "../types/user.types";
 
-type UserContextValue = {
+export type UserContextValue = {
   loggedUser: LoggedUserProfile
   userToken: string
 }

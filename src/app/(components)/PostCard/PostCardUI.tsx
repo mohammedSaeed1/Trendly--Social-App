@@ -1,3 +1,4 @@
+"use client"
 import { Avatar } from "@heroui/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,11 +7,18 @@ import Like from "./Like";
 import Share from "./Share";
 import Comment from "./Comment";
 import PostActionsMenu from "./PostActionsMenu";
-
 import { Post } from "@/app/types/post.types";
 import { formatEgyptDate } from "@/app/utlitis/Date";
+import { useContext } from "react";
+import { UserContext, UserContextValue } from "@/app/Context/UserContext";
+import { LoggedUserProfile } from "@/app/types/user.types";
 
-export default function PostCardUI({post,userId}: {post: Post , userId: string}) {
+export default function PostCardUI({post}: {post: Post}) {
+
+
+ const {loggedUser} : {loggedUser : LoggedUserProfile} = useContext<UserContextValue | null>(UserContext);
+   
+ 
   return (
     <div className=" rounded-2xl border border-white/10 bg-white/5 shadow-xl backdrop-blur-xl">
       {/* Header */}
@@ -39,7 +47,7 @@ export default function PostCardUI({post,userId}: {post: Post , userId: string})
           </div>
         </div>
 
-        {userId === post.user._id && <PostActionsMenu post={post} />}
+        {loggedUser?.user?._id === post.user._id && <PostActionsMenu post={post} />}
       </header>
 
       {/* Content */}
@@ -56,7 +64,6 @@ export default function PostCardUI({post,userId}: {post: Post , userId: string})
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
             <PostCardUI
               post={post.sharedPost}
-              userId={userId}
             />
           </div>
         )}
