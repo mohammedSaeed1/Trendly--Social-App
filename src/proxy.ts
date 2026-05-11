@@ -27,6 +27,9 @@ export const config = {
     "/notifications",
     "/login",
     "/register",
-    "/changePassword"
+    "/changePassword",
+    "/following/:path*",
+    "/followers/:path*",
+    "/explore"
   ],
 };

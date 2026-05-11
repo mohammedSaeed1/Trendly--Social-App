@@ -27,7 +27,7 @@ export default function PostCardUI({post,userId}: {post: Post , userId: string})
           </Link>
 
           <div>
-            <Link href={`/profile/${post.user._id}`}>
+            <Link href={`/profile/${post?.user?._id}`}>
               <h2 className="text-sm font-semibold text-white">
                 {post.user.name}
               </h2>
