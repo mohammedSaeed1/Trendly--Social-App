@@ -55,6 +55,7 @@ export default function Sidebar() {
     });
     setUnreadCountNotifications(0);
     router.push("/login");
+    router.refresh();
   }
 
   useEffect(() => {
