@@ -33,7 +33,7 @@ export default function Register() {
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4 sm:p-6">
+        <div className="w-full overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-4 sm:p-6">
           <RegisterForm />
         </div>
       </div>

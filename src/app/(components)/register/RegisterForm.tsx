@@ -53,7 +53,7 @@ export default function RegisterForm() {
     "bg-white/5 w-full border border-white/10 text-white placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 transition";
 
   return (
-    <Form onSubmit={handleSubmit(handleRegister)} className="space-y-4">
+    <Form onSubmit={handleSubmit(handleRegister)} className="space-y-4 w-full">
 
       <h2 className="text-white text-2xl font-semibold mb-2">
         Create Account
@@ -87,7 +87,7 @@ export default function RegisterForm() {
       </div>
 
 {/* Date of Birth */}
-<div className="w-full">
+<div className="w-full overflow-hidden">
   <Label className="mb-1 block text-slate-300">
     Date of Birth
   </Label>
@@ -95,12 +95,12 @@ export default function RegisterForm() {
   <Input
     {...register("dateOfBirth")}
     type="date"
-    className={`w-full max-w-[100%] min-w-0 bg-transparent border border-white/10 text-white placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 transition`}
+    className="w-full bg-white/5 border border-white/10 text-[#7C89A5] placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 transition "
   />
 
   {(touchedFields.dateOfBirth || isSubmitted) &&
     errors.dateOfBirth && (
-      <p className="mt-1 text-sm text-red-400 break-words">
+      <p className="mt-1 text-sm text-red-400">
         {errors.dateOfBirth.message}
       </p>
     )}
