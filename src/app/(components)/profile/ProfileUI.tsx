@@ -119,7 +119,7 @@ export default function ProfileUI({
                     value: userProfile?.user.bookmarksCount,
                   },
                 ].map(({ label, value }) => (
-                  <Link  key={label} href={label === 'Followers' ? `/followers/${userProfile.user._id}` : label === 'Following' ? `/following/${userProfile.user._id}` : `/profile/${userProfile.user._id}`}>
+                  <Link  key={label} href={label === 'Followers' ? `/followers/${userProfile?.user?._id}` : label === 'Following' ? `/following/${userProfile?.user?._id}` : `/profile/${userProfile.user._id}`}>
                   <div
                     className="rounded-2xl border border-white/10 bg-slate-900/60 py-4 text-center"
                   >

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Notification } from "@/app/types/notification.types";
 import {markNotificationAsRead , markAllAsRead} from "./Notifications.actions";
+import Link from "next/link";
 
 function formatTime(date: string) {
   return new Date(date).toLocaleString("en-US", {
@@ -22,7 +23,7 @@ function getMessage(type: string) {
        case "share_post":
       return "shared your post";
         case "follow_user":
-      return "started follow you";
+      return "started following you";
     default:
       return "interacted with your content";
   }
@@ -59,8 +60,8 @@ async function handleReadNotification(notificationId : string){
       <div className="max-w-xl mx-auto space-y-3">
 
          { notifications?.length > 0 ? notifications?.map((notification) => 
+          <Link key={notification._id} href={notification.type === 'like_post' || notification.type === 'comment_post' || notification.type === 'share_post' ? `/posts/${notification.entity._id}` : '/' }>
            <div 
-              key={notification._id}
               onClick={() => handleReadNotification(notification._id)}
               className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer transition
                 ${
@@ -108,6 +109,7 @@ async function handleReadNotification(notificationId : string){
               </div>
 
             </div> 
+          </Link>
           ) : <p className=" text-white text-center pt-10">No notifications added yet !</p>}
 
 
