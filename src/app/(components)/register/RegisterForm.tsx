@@ -86,7 +86,7 @@ export default function RegisterForm() {
         )}
       </div>
 
-    {/* Date of Birth */}
+{/* Date of Birth */}
 <div className="w-full">
   <Label className="mb-1 block text-slate-300">
     Date of Birth
@@ -95,12 +95,15 @@ export default function RegisterForm() {
   <Input
     {...register("dateOfBirth")}
     type="date"
-    className={`${inputClass} w-full min-h-12 text-sm sm:text-base`}
+    className={`w-full min-w-0 bg-transparent ${inputClass}`}
+    style={{
+      maxWidth: "100%",
+    }}
   />
 
   {(touchedFields.dateOfBirth || isSubmitted) &&
     errors.dateOfBirth && (
-      <p className="mt-1 text-sm text-red-400">
+      <p className="mt-1 text-sm text-red-400 break-words">
         {errors.dateOfBirth.message}
       </p>
     )}
