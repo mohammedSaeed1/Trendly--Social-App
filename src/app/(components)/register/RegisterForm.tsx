@@ -95,10 +95,7 @@ export default function RegisterForm() {
   <Input
     {...register("dateOfBirth")}
     type="date"
-    className={`w-full min-w-0 bg-transparent ${inputClass}`}
-    style={{
-      maxWidth: "100%",
-    }}
+    className={`w-full max-w-[100%] min-w-0 bg-transparent border border-white/10 text-white placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 transition`}
   />
 
   {(touchedFields.dateOfBirth || isSubmitted) &&
