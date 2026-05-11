@@ -23,6 +23,10 @@ export default async function Explore() {
             </p>
           </div>
 
+        <aside className="top-24 self-start space-y-6 lg:col-span-4 lg:block">
+          <TrendingHashtags />
+        </aside>
+
           {/* Posts */}
           {posts?.length ? (
             posts.map((post) => <PostCard key={post._id} post={post} />)
@@ -37,11 +41,6 @@ export default async function Explore() {
             </div>
           )}
         </main>
-
-        {/* Right Sidebar */}
-        <aside className="top-24 hidden self-start space-y-6 lg:col-span-4 lg:block">
-          <TrendingHashtags />
-        </aside>
       </div>
     </section>
   );
