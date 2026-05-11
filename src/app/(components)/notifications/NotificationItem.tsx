@@ -60,7 +60,7 @@ async function handleReadNotification(notificationId : string){
       <div className="max-w-xl mx-auto space-y-3">
 
          { notifications?.length > 0 ? notifications?.map((notification) => 
-          <Link key={notification._id} href={notification.type === 'like_post' || notification.type === 'comment_post' || notification.type === 'share_post' ? `/posts/${notification.entity._id}` : '/' }>
+          <Link key={notification._id} href={notification.type === 'like_post' || notification.type === 'comment_post' || notification.type === 'share_post' ? `/posts/${notification?.entity?._id}` : '/' }>
            <div 
               onClick={() => handleReadNotification(notification._id)}
               className={`flex items-start gap-3 p-3 rounded-2xl border cursor-pointer transition

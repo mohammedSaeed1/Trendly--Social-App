@@ -10,8 +10,18 @@ export default async function SinglePost({ params }: { params: Promise<{ id: str
   const post = await getSinglePost(id);
   const comments = await getPostComments(id);
   
+  if (!post) {
+  return (
+    <p className="text-white text-center mt-10">
+      Post not found
+    </p>
+
+  );
+}
   return (
     <>
+
+
        <section className="min-h-dvh overflow-y-auto pb-24 bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 py-10 px-4">
       
       <div className="max-w-2xl mx-auto space-y-6">

@@ -11,6 +11,7 @@ export default function BookmarkPosts() {
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
+
   async function handleToggle() {
     try {
       setIsVisible((prev) => !prev);
@@ -60,7 +61,7 @@ export default function BookmarkPosts() {
             <div className="space-y-4">
               {bookmarks.map((post) => (
                 <div key={post._id} className="rounded-xl shadow-sm p-3">
-                  <PostCardUI post={post} userId={post.user._id}/> 
+                  <PostCardUI post={post}/> 
                 </div>
               ))}
             </div>
