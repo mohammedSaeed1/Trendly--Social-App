@@ -18,9 +18,127 @@ type VideoItem = {
 
 const API_KEY = process.env.NEXT_PUBLIC_PEXELS_API_KEY as string;
 
-const QUERIES = [
-  "egypt","cairo","travel","food","street food",
-  "nature","gym","fitness","cars","cinematic","viral video",
+const videoKeywords = [
+  // Technology & Coding
+  "technology",
+  "coding",
+  "programming",
+  "web development",
+  "software development",
+  "developer workspace",
+  "laptop coding",
+  "typing on keyboard",
+  "computer screen",
+  "dark office",
+  "startup office",
+
+  // Social Media & Mobile Apps
+  "social media",
+  "mobile app",
+  "smartphone scrolling",
+  "chat messages",
+  "notifications",
+  "online communication",
+  "people using phone",
+  "digital connection",
+
+  // Lifestyle
+  "lifestyle",
+  "daily life",
+  "city life",
+  "morning routine",
+  "walking street",
+  "coffee shop",
+  "friends talking",
+  "young people smiling",
+  "work from cafe",
+
+  // Egypt
+  "Egypt",
+  "Cairo",
+  "Alexandria Egypt",
+  "Nile River",
+  "Egyptian street",
+  "Egyptian market",
+  "Khan El Khalili",
+  "Cairo skyline",
+  "Pyramids of Giza",
+  "Egyptian culture",
+
+  // Egyptian Food
+  "koshari",
+  "falafel Egypt",
+  "foul medames",
+  "Egyptian breakfast",
+  "Egyptian food",
+  "street food Egypt",
+  "traditional Egyptian food",
+
+  // Fitness & Gym
+  "gym workout",
+  "weight lifting",
+  "fitness training",
+  "running treadmill",
+  "bodybuilding",
+  "exercise",
+  "healthy lifestyle",
+  "personal training",
+
+  // Gaming
+  "gaming",
+  "video games",
+  "playing PlayStation",
+  "gaming setup",
+  "RGB keyboard",
+  "esports",
+  "game controller",
+  "streamer setup",
+
+  // Travel
+  "travel",
+  "airplane window",
+  "beach",
+  "mountains",
+  "road trip",
+  "hotel view",
+
+  // Nature
+  "sunset",
+  "ocean waves",
+  "forest",
+  "rain",
+  "sky clouds",
+
+  // Business & Productivity
+  "business meeting",
+  "teamwork",
+  "office work",
+  "remote work",
+  "freelancer working",
+
+  // Education
+  "studying",
+  "student laptop",
+  "online learning",
+  "university campus",
+
+  // Music & Entertainment
+  "concert",
+  "headphones",
+  "listening to music",
+  "DJ",
+
+  // Cars
+  "driving car",
+  "luxury car",
+  "city driving",
+
+  // High-Quality Search Terms
+  "4k",
+  "cinematic",
+  "slow motion",
+  "aesthetic",
+  "professional"
 ];
 
 /* ─── Helpers ─────────────────────────────────────── */
@@ -183,7 +301,7 @@ export default function ReelsPro() {
     if (loading || !API_KEY) return;
     setLoading(true);
     try {
-      const q = QUERIES[Math.floor(Math.random() * QUERIES.length)];
+      const q = videoKeywords[Math.floor(Math.random() * videoKeywords.length)];
       const res = await fetch(
         `https://api.pexels.com/videos/search?query=${encodeURIComponent(q)}&orientation=portrait&per_page=6&page=${pageRef.current}`,
         { headers: { Authorization: API_KEY } }
