@@ -1,6 +1,6 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 
 export async function getNotifications(){
@@ -41,16 +41,16 @@ export async function markNotificationAsRead(notificationId : string){
         Token : token || ""
     }
    })
-    if(res.ok) revalidateTag("getUnreadCount","max");
+    if(res.ok) updateTag("getUnreadCount");
 }
 
 export async function markAllAsRead(){
-    const token = await getToken();
-   const res = await fetch(`https://route-posts.routemisr.com/notifications/read-all`,{
+  const token = await getToken();
+  const res = await fetch(`https://route-posts.routemisr.com/notifications/read-all`,{
         method: "PATCH",
     headers:{
         Token : token || ""
     }
     })
-    if(res.ok) revalidateTag("getUnreadCount","max");
+    if(res.ok) updateTag("getUnreadCount");
 }

@@ -7,7 +7,6 @@ export default async function Following({params}:{params: Promise<{id : string}>
 
   const userId = (await params).id;
   const userFollowwing : UserProfile = await getUserProfile(userId);
-  if(userFollowwing?.user?.following?.length)
 
   return (
         <section className="min-h-screen bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 px-4 py-8 lg:pl-72">
@@ -22,7 +21,7 @@ export default async function Following({params}:{params: Promise<{id : string}>
 
         {/* Users List */}
         <div className="space-y-4">
-          {userFollowwing?.user?.following?.length > 0 ?  userFollowwing?.user?.following?.map((user) => (
+          {userFollowwing?.user?.following?.length && userFollowwing?.user?.following?.length > 0 ?  userFollowwing?.user?.following?.map((user) => (
             <div key={user.id}
               className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl transition hover:bg-white/10"
             >

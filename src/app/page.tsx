@@ -19,9 +19,24 @@ export default async function Home() {
 
             <CreatePost/>
 
-            {feedPosts?.map((post) => (
+            { feedPosts?.length && feedPosts?.length > 0 ?  feedPosts?.map((post) => (
               <PostCard key={post._id} post={post} />
-            ))}
+            )) : (
+            <div className="rounded-3xl border border-white/10 bg-white/5 py-16 text-center backdrop-blur-xl">
+
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-slate-400">
+                <i className="fa-regular fa-image text-2xl"></i>
+              </div>
+
+              <h3 className="text-lg font-semibold text-white">
+                No posts yet
+              </h3>
+
+              <p className="mt-2 text-sm text-slate-400">
+                Add post or follow users to show posts.
+              </p>
+            </div>
+          )}
 
           </main>
 

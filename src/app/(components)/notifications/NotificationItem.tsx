@@ -2,8 +2,7 @@
 
 import Image from "next/image";
 import { Notification } from "@/app/types/notification.types";
-import {markNotificationAsRead , markAllAsRead, getUnreadCount} from "./Notifications.actions";
-import { useRouter } from "next/navigation";
+import {markNotificationAsRead , markAllAsRead} from "./Notifications.actions";
 
 function formatTime(date: string) {
   return new Date(date).toLocaleString("en-US", {
@@ -31,15 +30,12 @@ function getMessage(type: string) {
 
 export default function NotificationItem({notifications}:{notifications: Notification[]}){
 
-  const router = useRouter();
 
 async function handleReadAllNotifications(){
    await markAllAsRead();
-  router.refresh();
 }
 async function handleReadNotification(notificationId : string){
   await markNotificationAsRead(notificationId);
-  router.refresh();
 }
 
   return (

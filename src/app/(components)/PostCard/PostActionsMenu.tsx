@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { deletePost, updatePost } from "./PostCard.actions";
 import { Post } from "@/app/types/post.types";
-import { useRouter } from "next/navigation";
 
 export default function PostActionsMenu({ post }: { post: Post }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,7 +14,6 @@ export default function PostActionsMenu({ post }: { post: Post }) {
   const [imagePreview, setImagePreview] = useState<string | null>(post.image || null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   // Reset modal state whenever it opens
   useEffect(() => {
@@ -56,7 +54,6 @@ export default function PostActionsMenu({ post }: { post: Post }) {
     setIsMenuOpen(false);
     if (isDeletedSuccessfully) {
       toast.success("Post deleted successfully");
-      router.refresh();
     } else {
       toast.danger("Failed to delete post");
     }
@@ -83,7 +80,6 @@ export default function PostActionsMenu({ post }: { post: Post }) {
     if (isUpdatedSuccessfully) {
       setIsEditOpen(false);
       toast.success("Post updated successfully");
-      router.refresh();
     } else {
       toast.danger("Failed to update post");
     }

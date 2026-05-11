@@ -12,7 +12,6 @@ import { toast } from "@heroui/react";
 import { useContext, useRef, useState } from "react";
 import { Post } from "@/app/types/post.types";
 import { UserContext } from "@/app/Context/UserContext";
-import { useRouter } from "next/navigation";
 
 export default function Comments({
   comments,
@@ -30,7 +29,6 @@ export default function Comments({
 
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   if (!userContext) return null;
   const { loggedUser } = userContext;
 
@@ -70,7 +68,6 @@ export default function Comments({
 
   async function handleLike(commentId: string) {
     const ok = await addLikeAndUnlikeComment(post._id, commentId);
-    if(ok) router.refresh();
     if (!ok) toast.danger("Like failed");
   }
 

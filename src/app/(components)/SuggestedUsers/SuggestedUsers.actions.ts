@@ -1,6 +1,6 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export async function followAndUnfollowUser(userId : string){
     const token = await getToken();
@@ -12,7 +12,7 @@ export async function followAndUnfollowUser(userId : string){
     })
     if(res.ok){
         const data = await res.json();
-        revalidateTag(`getUserProfile${userId}`,"max");
+        updateTag(`getUserProfile${userId}`);
         return data.data.following;
     }
 }

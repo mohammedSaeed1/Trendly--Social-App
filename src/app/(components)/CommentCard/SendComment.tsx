@@ -5,10 +5,8 @@ import { toast } from "@heroui/react";
 import { createComment } from "../PostCard/PostCard.actions";
 import { Post } from "@/app/types/post.types";
 import { UserContext } from "@/app/Context/UserContext";
-import { useRouter } from "next/navigation";
 
 export default function SendComment({ post }: { post: Post }) {
-  const router = useRouter();
   const userContext = useContext(UserContext);
   const commentContent = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +28,6 @@ export default function SendComment({ post }: { post: Post }) {
       if (ok) {
         toast.success("Comment added");
         commentContent.current.value = "";
-        router.refresh();
       } else {
         toast.danger("Failed to comment");
       }

@@ -1,6 +1,6 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export async function uploadProfilePhoto(photo : FormData){
     const token = await getToken();
@@ -12,7 +12,7 @@ export async function uploadProfilePhoto(photo : FormData){
         }
     })
     if(res.ok){
-        revalidateTag("getMyProfile","max");
+        updateTag("getMyProfile");
         return true;
     }
 }

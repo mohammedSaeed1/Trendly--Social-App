@@ -1,5 +1,5 @@
 "use server"
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 import { getToken } from "@/app/lib/auth";
 
 export async function createPost(values : FormData){   
@@ -12,7 +12,8 @@ export async function createPost(values : FormData){
     }
   })
   if(res.ok){
-      revalidateTag("posts","max");
+      updateTag("posts");
+      updateTag("HomeFeed");
       return true;  
     } 
     else return false;

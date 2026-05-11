@@ -1,6 +1,6 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
 
 export async function addLikeAndUnLike(postId: string) {
     const token = await getToken();
@@ -11,7 +11,7 @@ export async function addLikeAndUnLike(postId: string) {
             }
         })
         if (res.ok) {
-            revalidateTag(`getSinglePost${postId}`,"max");
+            updateTag(`getSinglePost${postId}`);
             return true;
         }
         else return false;
@@ -26,7 +26,7 @@ export async function addBookmarkAndUnBookmark(postId: string) {
             }
         })
         if (res.ok) {
-            revalidateTag(`getSinglePost${postId}`,"max");
+            updateTag(`getSinglePost${postId}`);
             return true;
         }
         else return false;
@@ -43,7 +43,8 @@ export async function sharePost(postId: string , bodyContent? : string) {
         })
         if (res.ok) {
             const data = await res.json();
-            revalidateTag("posts","max");
+            updateTag("posts");
+            updateTag("HomeFeed");
             return data.data.post;
         }
         else return false;   
@@ -57,7 +58,8 @@ export async function deletePost(postId: string) {
             }
         })
         if (res.ok) {
-           revalidateTag("posts","max");
+           updateTag("posts");
+           updateTag("HomeFeed");
             return true
         }
         else return false;
@@ -73,7 +75,8 @@ export async function updatePost(postId: string , values : FormData) {
             }
         })
         if (res.ok) {
-           revalidateTag(`posts`,"max");
+           updateTag(`posts`);
+            updateTag("HomeFeed");
             return true;
         }
         else return false;
@@ -90,7 +93,7 @@ export async function createComment(postId : string , values : FormData){
     });
     if(res.ok){
         const data = await res.json();
-        revalidateTag(`getPostComments${postId}`,"max");
+        updateTag(`getPostComments${postId}`);
         return data;
     }
     else return false;
@@ -123,7 +126,7 @@ export async function deleteComment(postId : string , commentId : string){
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`,"max");
+        updateTag(`getPostComments${postId}`);
         return true;
     }
     else return false;
@@ -139,7 +142,7 @@ export async function updateComment(postId : string , commentId : string , updat
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`,"max");
+        updateTag(`getPostComments${postId}`);
         return true;
     }
     else return false;
@@ -154,7 +157,7 @@ export async function addLikeAndUnlikeComment(postId : string , commentId : stri
         },
     });
     if(res.ok){
-        revalidateTag(`getPostComments${postId}`,"max");
+        updateTag(`getPostComments${postId}`);
         return true;
     }
     else return false;
@@ -170,7 +173,7 @@ export async function createReply(postId : string , commentId : string , content
         },
     });
     if(res.ok){
-        revalidateTag(`getCommentReplies${commentId}`,"max");
+        updateTag(`getCommentReplies${commentId}`);
         return true;
     }
     else return false;

@@ -4,13 +4,11 @@ import { toast, Avatar, Modal, TextArea } from "@heroui/react";
 import Image from "next/image";
 import { sharePost } from "./PostCard.actions";
 import { Post } from "@/app/types/post.types";
-import { useRouter } from "next/navigation";
 
 export default function Share({ post }: { post: Post }) {
   const [isOpen, setIsOpen] = useState(false);
   const [content, setContent] = useState("");
   const [isSharing, setIsSharing] = useState(false);
-const router = useRouter();
   
 
   function handleOpenModal() {
@@ -30,7 +28,6 @@ const router = useRouter();
       toast.success("Post shared successfully");
       setContent("");
       setIsOpen(false);
-      router.refresh();
     } catch (_) {
       toast.danger("Failed to share post");
     } finally {
