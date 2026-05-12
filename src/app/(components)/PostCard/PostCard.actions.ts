@@ -1,10 +1,12 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
 import { updateTag } from "next/cache";
+const baseURL = process.env.API_BASE_URL;
+
 
 export async function addLikeAndUnLike(postId: string) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/like`, {
+        const res = await fetch(`${baseURL}/posts/${postId}/like`, {
             method: "PUT",
             headers: {
                 Token: token || ""
@@ -19,7 +21,7 @@ export async function addLikeAndUnLike(postId: string) {
 
 export async function addBookmarkAndUnBookmark(postId: string) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/bookmark`, {
+        const res = await fetch(`${baseURL}/posts/${postId}/bookmark`, {
             method: "PUT",
             headers: {
                 Token: token || ""
@@ -34,7 +36,7 @@ export async function addBookmarkAndUnBookmark(postId: string) {
     }
 export async function sharePost(postId: string , bodyContent? : string) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/share`, {
+        const res = await fetch(`${baseURL}/posts/${postId}/share`, {
             method: "POST",
             body: bodyContent ? JSON.stringify({body : bodyContent}) : undefined,
             headers: {
@@ -52,7 +54,7 @@ export async function sharePost(postId: string , bodyContent? : string) {
     }
 export async function deletePost(postId: string) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+        const res = await fetch(`${baseURL}/posts/${postId}`, {
             method: "DELETE",
             headers: {
                 Token: token || "",
@@ -68,7 +70,7 @@ export async function deletePost(postId: string) {
     }
 export async function updatePost(postId: string , values : FormData) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+        const res = await fetch(`${baseURL}/posts/${postId}`, {
             method: "PUT",
             body: values,
             headers: {
@@ -85,7 +87,7 @@ export async function updatePost(postId: string , values : FormData) {
 
 export async function createComment(postId : string , values : FormData){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments`, {
         method: "POST",
         headers: {
             "Token": token || ""
@@ -102,7 +104,7 @@ export async function createComment(postId : string , values : FormData){
 
 export async function getPostComments(postId : string){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments`, {
         method: "GET",
         headers: {
             "Token": token || ""
@@ -120,7 +122,7 @@ export async function getPostComments(postId : string){
 
 export async function deleteComment(postId : string , commentId : string){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments/${commentId}`, {
         method: "Delete",
         headers: {
             "Token": token || ""
@@ -135,7 +137,7 @@ export async function deleteComment(postId : string , commentId : string){
 
 export async function updateComment(postId : string , commentId : string , updatedContent:FormData){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments/${commentId}`, {
         method: "PUT",
         body: updatedContent,
         headers: {
@@ -151,7 +153,7 @@ export async function updateComment(postId : string , commentId : string , updat
 
 export async function addLikeAndUnlikeComment(postId : string , commentId : string){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/like`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments/${commentId}/like`, {
         method: "PUT",
         headers: {
             "Token": token || ""
@@ -167,7 +169,7 @@ export async function addLikeAndUnlikeComment(postId : string , commentId : stri
 
 export async function createReply(postId : string , commentId : string , content:FormData){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/replies`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments/${commentId}/replies`, {
         method: "POST",
         body: content,
         headers: {
@@ -183,7 +185,7 @@ export async function createReply(postId : string , commentId : string , content
 
 export async function getCommentReplies(postId : string , commentId : string){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}/comments/${commentId}/replies`, {
+    const res = await fetch(`${baseURL}/posts/${postId}/comments/${commentId}/replies`, {
         method: "GET",
         headers: {
             Token: token || ""

@@ -1,10 +1,12 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
 import { updateTag } from "next/cache";
+const baseURL = process.env.API_BASE_URL;
+
 
 export async function uploadProfilePhoto(photo : FormData){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/users/upload-photo`,{
+    const res = await fetch(`${baseURL}/users/upload-photo`,{
         method: "PUT",
         body: photo,
         headers:{

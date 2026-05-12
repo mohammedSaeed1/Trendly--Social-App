@@ -1,11 +1,13 @@
 "use server"
 import { getToken } from "@/app/lib/auth";
 import { updateTag } from "next/cache";
+const baseURL = process.env.API_BASE_URL;
+
 
 
 export async function getNotifications(){
     const token = await getToken();
-   const res = await fetch(`https://route-posts.routemisr.com/notifications`,{
+   const res = await fetch(`${baseURL}/notifications`,{
         headers:{
             Token : token || ""
         }
@@ -18,7 +20,7 @@ export async function getNotifications(){
 
 export async function getUnreadCount(){
     const token = await getToken();
-   const res = await fetch(`https://route-posts.routemisr.com/notifications/unread-count`,{
+   const res = await fetch(`${baseURL}/notifications/unread-count`,{
         headers:{
             Token : token || ""
         },
@@ -35,7 +37,7 @@ export async function getUnreadCount(){
 export async function markNotificationAsRead(notificationId : string){
     const token = await getToken();
 
-   const res = await fetch(`https://route-posts.routemisr.com/notifications/${notificationId}/read`,{
+   const res = await fetch(`${baseURL}/notifications/${notificationId}/read`,{
     method: "PATCH",
     headers:{
         Token : token || ""
@@ -46,7 +48,7 @@ export async function markNotificationAsRead(notificationId : string){
 
 export async function markAllAsRead(){
   const token = await getToken();
-  const res = await fetch(`https://route-posts.routemisr.com/notifications/read-all`,{
+  const res = await fetch(`${baseURL}/notifications/read-all`,{
         method: "PATCH",
     headers:{
         Token : token || ""

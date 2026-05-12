@@ -1,10 +1,12 @@
 "use server"
 import { cookies } from "next/headers";
 import { LoginSchemaType } from "./login.types";
+const baseURL = process.env.API_BASE_URL;
+
 
 export async function loginForm(values: LoginSchemaType) {
 
-    const res = await fetch(`https://route-posts.routemisr.com/users/signin`, {
+    const res = await fetch(`${baseURL}/users/signin`, {
         method: "POST",
         body: JSON.stringify(values),
         headers: {

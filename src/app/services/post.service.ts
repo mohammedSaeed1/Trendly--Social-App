@@ -1,9 +1,11 @@
 import { getToken } from "../lib/auth";
 import { Post } from "../types/post.types";
+const baseURL = process.env.API_BASE_URL;
+
 
 export async function getAllPosts() :Promise<Post[] | undefined>{
     const token = await getToken();
-    const res = await fetch("https://route-posts.routemisr.com/posts",{
+    const res = await fetch(`${baseURL}/posts`,{
      headers:{
       Token : token || ""
      },
@@ -20,7 +22,7 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
    }
    export async function getHomeFeed() :Promise<Post[] | undefined>{
     const token = await getToken();
-    const res = await fetch("https://route-posts.routemisr.com/posts/feed?only=following&limit=20",{
+    const res = await fetch(`${baseURL}/posts/feed?only=following&limit=20`,{
      headers:{
       Token : token || ""
      },
@@ -38,7 +40,7 @@ export async function getAllPosts() :Promise<Post[] | undefined>{
 
 export async function getSinglePost(postId: string) {
     const token = await getToken();
-        const res = await fetch(`https://route-posts.routemisr.com/posts/${postId}`, {
+        const res = await fetch(`${baseURL}/posts/${postId}`, {
             method: "GET",
             headers: {
                 Token: token || ""

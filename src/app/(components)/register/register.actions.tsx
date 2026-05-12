@@ -1,9 +1,11 @@
 "use server"
 import { cookies } from "next/headers";
 import { RegisterSchemaType } from "./register.types";
+const baseURL = process.env.API_BASE_URL;
+
 
 export async function registerForm(values: RegisterSchemaType) {
-    const res = await fetch(`https://route-posts.routemisr.com/users/signup`, {
+    const res = await fetch(`${baseURL}/signup`, {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
@@ -20,10 +22,6 @@ export async function registerForm(values: RegisterSchemaType) {
         })
         return true;
     }
-    else {
-        const data = await res.json();
-        console.log(data);
-        return false;
-    }
+    else return false;
 }
 

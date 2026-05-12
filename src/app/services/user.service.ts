@@ -1,8 +1,9 @@
 import { getToken } from "../lib/auth";
+const baseURL = process.env.API_BASE_URL;
 
 export async function getUserProfile(userId : string){
     const token  = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/users/${userId}/profile`,{
+    const res = await fetch(`${baseURL}/users/${userId}/profile`,{
         headers:{
             Token: token || ""
         },
@@ -19,7 +20,7 @@ export async function getUserProfile(userId : string){
 export async function getMyProfile(){
     const token = await getToken();
 
-    const res = await fetch(`https://route-posts.routemisr.com/users/profile-data`,{
+    const res = await fetch(`${baseURL}/users/profile-data`,{
         headers:{
             Token: token || ""
         }
@@ -32,7 +33,7 @@ export async function getMyProfile(){
 
 export async function getFollowSuggestions(){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/users/suggestions`,{
+    const res = await fetch(`${baseURL}/users/suggestions`,{
         headers:{
             Token: token || ""
         },
@@ -52,7 +53,7 @@ export async function getFollowSuggestions(){
 
 export async function getUserPosts(userId : string){
     const token = await getToken();
-    const res = await fetch(`https://route-posts.routemisr.com/users/${userId}/posts`,{
+    const res = await fetch(`${baseURL}/users/${userId}/posts`,{
         headers:{
             Token: token || ""
         },
