@@ -96,7 +96,6 @@ export default function RegisterForm() {
     {...register("dateOfBirth")}
     type="date"
     className="w-full bg-white/5 border border-white/10 text-[#7C89A5] placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/30 transition "
-     placeholder="MM/DD/YYYY"
  />
 
   {(touchedFields.dateOfBirth || isSubmitted) &&

@@ -412,7 +412,7 @@ export default function ReelsPro() {
   return (
     <>
       <Keyframes />
-      <div className="min-h-svh bg-[#080810] sm:flex sm:items-center sm:justify-center">
+      <div className="min-h-svh bg-linear-to-br from-slate-950 via-indigo-950 to-slate-900 flex items-center justify-center">
         <div className="flex items-center gap-8">
 
           {/* ════════ PHONE / FEED FRAME ════════ */}
