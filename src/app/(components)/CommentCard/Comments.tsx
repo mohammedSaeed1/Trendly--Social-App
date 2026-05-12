@@ -26,7 +26,7 @@ export default function Comments({
   const [activeReplyCommentId, setActiveReplyCommentId] = useState<string | null>(null);
   const [visibleRepliesCommentId, setVisibleRepliesCommentId] = useState<string | null>(null);
   const [replies, setReplies] = useState<Record<string, Comment[]>>({});
-  const [isLikedComment, setIsLikedComment] = useState(false);
+  const [likedComments, setLikedComments] = useState<Record<string, boolean>>({});
   const editContentInput = useRef<HTMLInputElement>(null);
   const replyContentInput = useRef<HTMLInputElement>(null);
   if (!userContext) return null;
@@ -69,7 +69,10 @@ export default function Comments({
   async function handleLike(commentId: string) {
     try{
       const ok = await addLikeAndUnlikeComment(post._id, commentId);
-     setIsLikedComment(ok);
+      setLikedComments((prev) => ({
+      ...prev,
+      [commentId]: ok,
+    }));
     }
     catch(_){
       toast.danger("Failed while you trying to add or remove like");
@@ -264,7 +267,9 @@ export default function Comments({
             onClick={() => handleLike(comment._id)}
             className={`text-slate-400 transition shrink-0 pt-3`}
           >
-            <i className={`fa-solid fa-heart text-md cursor-pointer ${isLikedComment ? 'text-red-500' : 'text-[#637188]' }`}></i>
+            <i className={`fa-solid fa-heart text-md cursor-pointer ${likedComments[comment._id]
+        ? "text-red-500" : "text-[#637188"}`}>
+        </i>
           </button>
 
         </div>
