@@ -5,7 +5,7 @@ const baseURL = process.env.API_BASE_URL;
 
 
 export async function registerForm(values: RegisterSchemaType) {
-    const res = await fetch(`${baseURL}/signup`, {
+    const res = await fetch(`${baseURL}/users/signup`, {
         method: "POST",
         body: JSON.stringify(values),
         headers: {
@@ -22,6 +22,11 @@ export async function registerForm(values: RegisterSchemaType) {
         })
         return true;
     }
-    else return false;
+    else{
+        const data = await res.json();
+        console.log("from register",data);
+        
+       return false;
+    }
 }
 
