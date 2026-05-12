@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trendly — Social Media App
 
-## Getting Started
+Trendly is a modern social media web application built with Next.js and TypeScript. It allows users to create posts, interact with others through likes and comments, manage their profiles, receive notifications, and explore trending video content.
 
-First, run the development server:
+## 🚀 Live Demo
+
+> https://trendly-social-app.vercel.app/
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication
+- User registration and login
+- Secure token-based authentication
+- Protected routes
+
+### 📝 Posts
+- Create new posts
+- Edit and delete your posts
+- Upload images with posts
+- Bookmark posts
+- Share posts
+
+### ❤️ Likes
+- Like and unlike posts
+- Like and unlike comments
+
+### 💬 Comments & Replies
+- Add comments to posts
+- Edit and delete comments
+- Reply to comments
+- View nested replies
+
+### 👤 Profile Management
+- View user profiles
+- Edit profile information
+- Update profile picture and cover image
+
+### 🔔 Notifications
+- View notifications
+- Mark notifications as read
+
+### 🎥 Trending Videos
+- Browse trending videos using the Pexels API
+
+### 📱 Responsive Design
+- Fully responsive across desktop, tablet, and mobile devices
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- HeroUI
+- Font Awesome
+
+### Forms & Validation
+- React Hook Form
+- Zod
+- @hookform/resolvers
+
+### Utilities
+- jwt-decode
+
+### Tooling
+- ESLint
+- React Compiler (Babel Plugin)
+
+---
+
+## 📦 Installation
 
 ```bash
+git clone https://github.com/mohammedSaeed1/Trendly--Social-App.git
+cd Trendly--Social-App
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser and visit:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📜 Available Scripts
 
-## Learn More
+```bash
+npm run dev      # Start development server
+npm run build    # Build the project for production
+npm run start    # Run the production build
+npm run lint     # Run ESLint
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 📂 Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+src/
+├── app/
+│   ├── Context/
+│   ├── components/
+│   ├── types/
+│   ├── utilities/
+│   └── ...
+├── public/
+└── ...
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔐 Security
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Sensitive data stored in `.env.local`
+- Server-side API calls handled through Server Actions
+- Authentication-protected routes
+
+---
+
+## 👨‍💻 Author
+
+**Mohamed Saeed**
+
+- GitHub: https://github.com/mohammedSaeed1
+- LinkedIn: https://www.linkedin.com/in/mohamed-saeed-030246272/
+
+---
+
+## ⭐ Support
+
+If you found this project useful, please consider giving it a star on GitHub.
+
+---
+
+## 📄 License
+
+This project is for educational and portfolio purposes.
