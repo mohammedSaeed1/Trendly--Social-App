@@ -65,7 +65,7 @@ export default function SendComment({ post }: { post: Post }) {
         min-w-0
         bg-transparent
         outline-none
-        text-sm sm:text-base
+        text-base
         text-white
         placeholder:text-slate-400
       "
