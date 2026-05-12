@@ -1,14 +1,14 @@
 "use client"
 
-import { UserProfile } from "@/app/types/user.types";
+import { LoggedUserProfile, UserProfile } from "@/app/types/user.types";
 import { followAndUnfollowUser } from "../SuggestedUsers/SuggestedUsers.actions";
 import { useState } from "react";
 import { toast } from "@heroui/react";
 
-export default function FollowUnFollowBtn({ userProfile }: { userProfile: UserProfile}) {
+export default function FollowUnFollowBtn({userProfile} : {userProfile : UserProfile | LoggedUserProfile}) {
 
-    const [following, setFollowing] = useState<boolean>(userProfile.isFollowing);
-    async function handleFollowUnfollowUser() {
+    const [following, setFollowing] = useState<boolean>('isFollowing' in userProfile ? userProfile.isFollowing : false);
+     async function handleFollowUnfollowUser() {
         const isfollow = await followAndUnfollowUser(userProfile.user._id);
         try {
             setFollowing(isfollow);
@@ -17,9 +17,10 @@ export default function FollowUnFollowBtn({ userProfile }: { userProfile: UserPr
             toast.danger("Network failed!");
         }
     }
+
     return (
         <button
-            onClick={handleFollowUnfollowUser}
+        onClick={handleFollowUnfollowUser}
             className={`flex items-center cursor-pointer gap-2 rounded-2xl px-5 py-2.5 text-sm font-medium transition ${following
                 ? "border border-white/10 bg-white/5 text-white hover:bg-white/10"
                 : "bg-indigo-500 text-white hover:bg-indigo-400"}`}>
@@ -28,4 +29,3 @@ export default function FollowUnFollowBtn({ userProfile }: { userProfile: UserPr
         </button>
     )
 }
-
